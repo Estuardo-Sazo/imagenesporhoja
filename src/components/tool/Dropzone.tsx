@@ -50,7 +50,12 @@ export function Dropzone({ onFiles, variant = 'inline', disabled = false, disabl
       </button>
 
       <div className="picker-actions">
-        <button type="button" onClick={() => folderInput.current?.click()} disabled={disabled}>
+        <button
+          type="button"
+          className="folder-picker-button"
+          onClick={() => folderInput.current?.click()}
+          disabled={disabled}
+        >
           Elegir una carpeta
         </button>
       </div>

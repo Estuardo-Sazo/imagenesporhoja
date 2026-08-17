@@ -98,7 +98,36 @@
 .dropzone-mark span { background: currentColor; opacity: 0.55; }
 .dropzone-mark span:nth-child(3) { opacity: 1; }
 
-.picker-actions { display: flex; gap: 0.4rem; margin-top: 0.5rem; }
+.picker-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.folder-picker-button {
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--rule);
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--ink-mid);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s, transform 0.15s;
+}
+
+.folder-picker-button:hover:not(:disabled) {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.folder-picker-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
 
 .reading {
   margin: 0;
