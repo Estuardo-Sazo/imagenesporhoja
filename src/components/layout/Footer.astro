@@ -1,0 +1,30 @@
+---
+import { SITE } from '../../lib/config/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap inner">
+    <p class="tagline">
+      <strong>{SITE.name}</strong> · Acomoda tus imágenes en una hoja y mándalas a imprimir en
+      segundos. Gratis y sin registro.
+    </p>
+    <nav aria-label="Enlaces del pie">
+      <a href="/herramienta">Herramienta</a>
+      <a href="/#como-funciona">Cómo funciona</a>
+      <a href="/privacidad">Privacidad</a>
+      <a href="/terminos">Términos</a>
+    </nav>
+    <p class="legal">© {year} {SITE.name}. Tus imágenes nunca salen de tu dispositivo.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer { border-top: 1px solid var(--line); background: var(--surface-alt); padding: 2.5rem 0; }
+  .inner { display: grid; gap: 0.9rem; }
+  .tagline { margin: 0; color: var(--ink-soft); max-width: 40rem; font-size: 0.95rem; }
+  nav { display: flex; flex-wrap: wrap; gap: 1.2rem; }
+  nav a { color: var(--muted); text-decoration: none; font-size: 0.9rem; }
+  nav a:hover { color: var(--accent-strong); text-decoration: underline; }
+  .legal { margin: 0; font-size: 0.8rem; color: var(--muted); }
+</style>

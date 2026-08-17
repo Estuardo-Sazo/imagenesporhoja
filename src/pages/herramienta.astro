@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AdSlot from '../components/layout/AdSlot.astro';
+import ToolApp from '../components/tool/ToolApp';
+
+const title = 'Herramienta para acomodar imágenes en una hoja';
+const description =
+  'Carga tus imágenes, elige cuántas quieres por hoja y descarga el resultado en PDF o en Word. Gratis, sin registro y sin subir tus archivos a internet.';
+---
+
+<BaseLayout title={title} description={description} path="/herramienta">
+  <section class="tool-page">
+    <div class="wrap">
+      <header class="tool-intro">
+        <h1>Acomoda tus imágenes en una hoja</h1>
+        <p>
+          Carga las imágenes, escribe cuántas quieres por página y revisa la vista previa. Todo se
+          procesa en tu navegador: tus archivos no salen de este dispositivo.
+        </p>
+      </header>
+
+      <!-- client:only porque la herramienta depende del navegador
+           (Canvas, File API y objectURL) y no tiene sentido pre-renderizarla. -->
+      <ToolApp client:only="react" />
+
+      <AdSlot slot="toolFooter" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tool-page { padding: 2rem 0 3.5rem; }
+  .tool-intro { max-width: 42rem; margin-bottom: 1.75rem; }
+  .tool-intro h1 { font-size: clamp(1.6rem, 3.6vw, 2.2rem); }
+  .tool-intro p { color: var(--ink-soft); margin: 0; }
+  @media print {
+    .tool-page { padding: 0; }
+    .wrap { width: 100%; }
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+import { FAQ_ITEMS } from '../../lib/config/faq';
+---
+
+<section class="section" id="preguntas">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Preguntas frecuentes</span>
+      <h2>Dudas comunes</h2>
+    </div>
+
+    <div class="faq">
+      {
+        FAQ_ITEMS.map((item) => (
+          <details>
+            <summary>{item.question}</summary>
+            <p>{item.answer}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq { max-width: 46rem; border-top: 1px solid var(--line); }
+  details { border-bottom: 1px solid var(--line); }
+  summary {
+    cursor: pointer;
+    padding: 1.05rem 0;
+    font-weight: 600;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; color: var(--accent); font-size: 1.3rem; font-weight: 400; line-height: 1; }
+  details[open] summary::after { content: '−'; }
+  details p { margin: 0 0 1.05rem; color: var(--ink-soft); font-size: 0.96rem; max-width: 42rem; }
+</style>

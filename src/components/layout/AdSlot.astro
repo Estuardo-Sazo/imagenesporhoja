@@ -1,0 +1,57 @@
+---
+/**
+ * Hueco reservado para publicidad.
+ *
+ * Hoy no renderiza nada: ni contenedor, ni scripts de terceros
+ * (ver ADS.enabled en src/lib/config/site.ts). La maquetación ya tiene
+ * previstos los lugares, así que activar anuncios más adelante es cambiar
+ * una bandera de configuración, no rediseñar el sitio.
+ */
+import { ADS } from '../../lib/config/site';
+
+interface Props {
+  slot: keyof typeof ADS.slots;
+  label?: string;
+}
+
+const { slot, label = 'Publicidad' } = Astro.props;
+const slotId = ADS.slots[slot];
+const visible = ADS.enabled && Boolean(ADS.client) && Boolean(slotId);
+---
+
+{
+  visible && (
+    <aside class="ad-slot" aria-label={label}>
+      <span class="ad-tag">{label}</span>
+      <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-client={ADS.client}
+        data-ad-slot={slotId}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+      <script is:inline>
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </aside>
+  )
+}
+
+<style>
+  .ad-slot {
+    /* Altura reservada de antemano para que el contenido no salte cuando
+       el anuncio termina de cargar (eso penaliza en Core Web Vitals). */
+    min-height: 100px;
+    margin: 2rem auto;
+    text-align: center;
+  }
+  .ad-tag {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.35rem;
+  }
+</style>

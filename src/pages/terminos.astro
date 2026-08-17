@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../lib/config/site';
+
+const updated = '17 de agosto de 2026';
+---
+
+<BaseLayout
+  title="Términos de uso"
+  description="Condiciones de uso de Imágenes por Hoja: servicio gratuito, sin garantías, y el contenido que procesas sigue siendo tuyo."
+  path="/terminos"
+>
+  <section class="section">
+    <div class="wrap prose">
+      <h1>Términos de uso</h1>
+      <p class="lead">Última actualización: {updated}</p>
+
+      <h2>El servicio</h2>
+      <p>
+        {SITE.name} es una herramienta gratuita que acomoda imágenes en hojas para imprimir. Se
+        ofrece tal cual, sin costo y sin necesidad de registro.
+      </p>
+
+      <h2>Tu contenido</h2>
+      <p>
+        Las imágenes que utilices siguen siendo tuyas. Como el procesamiento ocurre por completo en
+        tu navegador, no obtenemos ningún derecho ni acceso sobre ellas. Eres responsable de contar
+        con los permisos necesarios sobre las imágenes que imprimas o distribuyas.
+      </p>
+
+      <h2>Uso aceptable</h2>
+      <ul>
+        <li>No uses el servicio para procesar material ilegal o que vulnere derechos de terceros.</li>
+        <li>No intentes interrumpir el funcionamiento del sitio ni el de otras personas.</li>
+      </ul>
+
+      <h2>Sin garantías</h2>
+      <p>
+        El servicio se proporciona «tal cual», sin garantías de disponibilidad, exactitud ni
+        idoneidad para un fin concreto. Revisa siempre la vista previa antes de mandar a imprimir:
+        no nos hacemos responsables del papel, la tinta ni el tiempo invertido en impresiones que no
+        queden como esperabas.
+      </p>
+
+      <h2>Limitación de responsabilidad</h2>
+      <p>
+        En la medida que la ley lo permita, no somos responsables de daños directos ni indirectos
+        derivados del uso o de la imposibilidad de uso del servicio.
+      </p>
+
+      <h2>Cambios</h2>
+      <p>
+        Estos términos pueden actualizarse. La versión vigente será siempre la publicada en esta
+        dirección.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

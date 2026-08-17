@@ -1,0 +1,47 @@
+---
+const cases = [
+  {
+    title: 'Informes y expedientes con fotos',
+    text: 'Reportes de obra, inspecciones, peritajes o bitácoras donde hay que documentar con varias fotografías por página.',
+  },
+  {
+    title: 'Tareas y trabajos escolares',
+    text: 'Láminas, collages y trabajos que piden un número exacto de imágenes por hoja.',
+  },
+  {
+    title: 'Impresión de fotos en casa',
+    text: 'Aprovecha cada hoja de papel fotográfico colocando varias fotos del mismo tamaño.',
+  },
+  {
+    title: 'Catálogos y listas de productos',
+    text: 'Hojas de muestra para clientes, inventarios visuales o menús con imágenes.',
+  },
+  {
+    title: 'Material para imprimir y recortar',
+    text: 'Etiquetas, tarjetas, gafetes o fichas: varias copias por hoja sin desperdiciar papel.',
+  },
+  {
+    title: 'Cibercafés y papelerías',
+    text: 'Resuelve en un minuto el clásico "necesito estas fotos en una hoja" sin instalar programas en la computadora del negocio.',
+  },
+];
+---
+
+<section class="section section-alt" id="casos">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Para qué sirve</span>
+      <h2>Quién la usa todos los días</h2>
+    </div>
+    <div class="cards">
+      {
+        cases.map((item) => (
+          <article class="card">
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

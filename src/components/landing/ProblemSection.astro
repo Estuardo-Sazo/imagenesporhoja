@@ -1,0 +1,60 @@
+---
+const pains = [
+  {
+    title: 'Arrastrar imágenes en Word se lleva la tarde',
+    text: 'Cambias el tamaño de una y se recorren todas. Ajustas el ajuste de texto, vuelves a empezar, y al final una se pasa a la hoja siguiente.',
+  },
+  {
+    title: 'Nunca caben las que necesitas',
+    text: 'Si son siete, alguien tiene que decidir a ojo qué tan grande va cada una. Y cuando mezclas fotos verticales con horizontales, el cálculo cambia por completo.',
+  },
+  {
+    title: 'Se desperdicia papel y tinta',
+    text: 'Acomodar a ojo deja franjas en blanco enormes. Si son cien fotos, son decenas de hojas de más.',
+  },
+  {
+    title: 'Las fotos salen estiradas',
+    text: 'Forzar una imagen a un cuadro que no le corresponde la deforma, y al imprimir se nota muchísimo.',
+  },
+];
+---
+
+<section class="section" id="que-resuelve">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">El problema</span>
+      <h2>Acomodar imágenes a mano es un trabajo repetitivo y lento</h2>
+      <p>
+        Imprimir varias fotos en una sola hoja parece sencillo hasta que lo intentas: es un
+        rompecabezas de proporciones, márgenes y milímetros que hay que resolver a mano cada vez.
+      </p>
+    </div>
+
+    <div class="cards">
+      {
+        pains.map((pain) => (
+          <article class="card">
+            <h3>{pain.title}</h3>
+            <p>{pain.text}</p>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="closing">
+      Esta herramienta hace ese cálculo por ti en el momento: tú eliges cuántas imágenes van por
+      hoja y ella decide el acomodo que mejor aprovecha el papel.
+    </p>
+  </div>
+</section>
+
+<style>
+  .closing {
+    margin: 2rem 0 0;
+    font-size: 1.05rem;
+    color: var(--ink);
+    max-width: 44rem;
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+  }
+</style>

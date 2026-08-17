@@ -1,0 +1,27 @@
+---
+interface Props {
+  title?: string;
+  text?: string;
+}
+const {
+  title = '¿Listo para dejar de acomodar imágenes a mano?',
+  text = 'Abre la herramienta, carga tus imágenes y dinos cuántas quieres por hoja. No hay que registrarse ni instalar nada.',
+} = Astro.props;
+---
+
+<section class="cta-banner">
+  <div class="wrap inner">
+    <div>
+      <h2>{title}</h2>
+      <p>{text}</p>
+    </div>
+    <a class="btn btn-primary" href="/herramienta">Usar la herramienta</a>
+  </div>
+</section>
+
+<style>
+  .cta-banner { background: var(--accent-soft); border-top: 1px solid var(--line); padding: clamp(2.5rem, 6vw, 4rem) 0; }
+  .inner { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between; }
+  .inner h2 { margin-bottom: 0.35rem; }
+  .inner p { margin: 0; color: var(--ink-soft); max-width: 34rem; }
+</style>

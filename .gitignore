@@ -1,0 +1,19 @@
+# dependencias
+node_modules/
+
+# salida de build
+dist/
+.astro/
+.output/
+.vercel/
+
+# entorno
+.env
+.env.production
+.env.local
+
+# sistema
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*

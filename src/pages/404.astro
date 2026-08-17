@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Página no encontrada"
+  description="La dirección que buscas no existe."
+  noindex
+>
+  <section class="section">
+    <div class="wrap prose">
+      <h1>No encontramos esa página</h1>
+      <p class="lead">Puede que el enlace esté mal escrito o que la página ya no exista.</p>
+      <p>
+        <a class="btn btn-primary" href="/herramienta">Ir a la herramienta</a>
+      </p>
+      <p><a href="/">Volver al inicio</a></p>
+    </div>
+  </section>
+</BaseLayout>

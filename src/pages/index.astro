@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import JsonLd from '../components/seo/JsonLd.astro';
+import Hero from '../components/landing/Hero.astro';
+import ProblemSection from '../components/landing/ProblemSection.astro';
+import HowItWorks from '../components/landing/HowItWorks.astro';
+import Features from '../components/landing/Features.astro';
+import UseCases from '../components/landing/UseCases.astro';
+import Faq from '../components/landing/Faq.astro';
+import CtaBanner from '../components/landing/CtaBanner.astro';
+import AdSlot from '../components/layout/AdSlot.astro';
+import { SITE } from '../lib/config/site';
+import { FAQ_ITEMS } from '../lib/config/faq';
+
+const title = 'Poner varias imágenes en una hoja para imprimir';
+const description =
+  'Herramienta gratuita para acomodar varias imágenes en una sola hoja. Eliges cuántas van por página y calcula el tamaño y la posición sin deformarlas, respetando los márgenes. Imprime, guarda en PDF o descarga en Word.';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      name: SITE.name,
+      url: SITE.url,
+      applicationCategory: 'DesignApplication',
+      operatingSystem: 'Cualquiera con navegador web',
+      inLanguage: 'es',
+      description,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      featureList: [
+        'Acomodo automático de varias imágenes por hoja',
+        'Márgenes configurables al milímetro',
+        'Respeta la proporción original de cada imagen',
+        'Exportación a PDF y a Word (.docx)',
+        'Funciona sin subir archivos a internet',
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: FAQ_ITEMS.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      })),
+    },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} path="/">
+  <JsonLd schema={schema} slot="head" />
+  <Hero />
+  <ProblemSection />
+  <HowItWorks />
+  <AdSlot slot="landingInline" />
+  <Features />
+  <UseCases />
+  <Faq />
+  <CtaBanner />
+</BaseLayout>

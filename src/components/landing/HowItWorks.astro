@@ -1,0 +1,86 @@
+---
+const steps = [
+  {
+    n: '1',
+    title: 'Carga tus imágenes',
+    text: 'Arrástralas a la página o elige una carpeta completa. Puedes reordenarlas arrastrando las miniaturas y girar las que salieron de lado.',
+  },
+  {
+    n: '2',
+    title: 'Di cuántas van por hoja',
+    text: 'Escribe el número, por ejemplo 7. Ajusta el tamaño de papel, la orientación, los márgenes y la separación entre imágenes si lo necesitas.',
+  },
+  {
+    n: '3',
+    title: 'Revisa la vista previa',
+    text: 'Verás la hoja tal cual va a salir impresa, a escala real y con los márgenes marcados. Si cambias algo, se recalcula al instante.',
+  },
+  {
+    n: '4',
+    title: 'Imprime o descarga',
+    text: 'Manda a imprimir directo, guarda un PDF desde el diálogo de impresión o descarga un documento de Word con todo ya acomodado.',
+  },
+];
+---
+
+<section class="section section-alt" id="como-funciona">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Cómo funciona</span>
+      <h2>Cuatro pasos y ni una sola imagen movida a mano</h2>
+      <p>De la carpeta a la impresora en menos de un minuto, aunque sean cien fotos.</p>
+    </div>
+
+    <ol class="steps">
+      {
+        steps.map((step) => (
+          <li>
+            <span class="badge">{step.n}</span>
+            <div>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="explainer">
+      <h3>Qué hace por dentro</h3>
+      <p>
+        No usa una cuadrícula fija. Prueba <strong>todas las formas posibles</strong> de repartir tus
+        imágenes en filas respetando el orden que elegiste, calcula qué altura tendría cada fila al
+        ocupar el ancho completo de la hoja y se queda con la combinación que cubre más superficie
+        sin deformar nada.
+      </p>
+      <p>
+        Por eso, cuando mezclas fotos verticales con horizontales, puede armar una fila de tres y
+        dos de dos en lugar de obligarte a una cuadrícula de 3 × 3 con huecos. Un control de
+        equilibrio evita el otro extremo: que una imagen salga enorme y las demás diminutas.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .steps { list-style: none; counter-reset: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); }
+  .steps li { display: flex; gap: 0.9rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.3rem; }
+  .badge {
+    flex: none;
+    width: 1.85rem;
+    height: 1.85rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: grid;
+    place-items: center;
+  }
+  .steps h3 { font-size: 1rem; margin-bottom: 0.2rem; }
+  .steps p { margin: 0; font-size: 0.92rem; color: var(--ink-soft); }
+  .explainer { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(1.4rem, 3vw, 2rem); max-width: 46rem; }
+  .explainer h3 { margin-bottom: 0.6rem; }
+  .explainer p { color: var(--ink-soft); font-size: 0.96rem; }
+  .explainer p:last-child { margin-bottom: 0; }
+</style>

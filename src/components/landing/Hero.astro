@@ -1,0 +1,66 @@
+---
+/** Portada: promesa clara en una frase y acceso directo a la herramienta. */
+---
+
+<section class="hero">
+  <div class="wrap grid">
+    <div class="copy">
+      <span class="eyebrow">Gratis · Sin registro · Sin instalar nada</span>
+      <h1>Varias imágenes en una hoja, acomodadas solas</h1>
+      <p class="lead">
+        Dinos cuántas imágenes quieres por página y calculamos el tamaño y la posición que mejor
+        aprovechan el papel, sin deformar nada y respetando tus márgenes. Después imprimes o
+        descargas el documento de Word.
+      </p>
+      <div class="cta">
+        <a class="btn btn-primary" href="/herramienta">Usar la herramienta</a>
+        <a class="btn btn-ghost" href="#como-funciona">Ver cómo funciona</a>
+      </div>
+      <p class="trust">
+        Tus imágenes <strong>nunca se suben a internet</strong>: todo el trabajo ocurre dentro de tu
+        navegador.
+      </p>
+    </div>
+
+    <div class="visual" aria-hidden="true">
+      <svg viewBox="0 0 260 336" role="img">
+        <rect x="0" y="0" width="260" height="336" rx="6" fill="#fff" stroke="#e2e8f0"></rect>
+        <rect
+          x="16"
+          y="16"
+          width="228"
+          height="304"
+          fill="none"
+          stroke="#cbd5e1"
+          stroke-dasharray="4 4"></rect>
+        <g>
+          <rect x="16" y="30" width="64" height="86" rx="3" fill="#2563eb" opacity="0.9"></rect>
+          <rect x="86" y="30" width="64" height="86" rx="3" fill="#38bdf8" opacity="0.9"></rect>
+          <rect x="156" y="30" width="88" height="86" rx="3" fill="#0ea5e9" opacity="0.75"></rect>
+
+          <rect x="16" y="124" width="228" height="98" rx="3" fill="#1d4ed8" opacity="0.85"></rect>
+
+          <rect x="16" y="230" width="110" height="90" rx="3" fill="#60a5fa" opacity="0.9"></rect>
+          <rect x="134" y="230" width="110" height="90" rx="3" fill="#93c5fd" opacity="0.95"></rect>
+        </g>
+      </svg>
+      <span class="visual-note">7 imágenes en una hoja carta, márgenes de 1 cm</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { padding: clamp(3rem, 8vw, 5.5rem) 0; background: linear-gradient(180deg, var(--accent-soft), var(--surface)); }
+  .grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .copy { max-width: 34rem; }
+  .cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.75rem 0 1.25rem; }
+  .trust { font-size: 0.88rem; color: var(--muted); margin: 0; }
+  .visual { display: grid; justify-items: center; gap: 0.6rem; }
+  .visual svg { width: min(100%, 17rem); filter: drop-shadow(0 10px 26px rgba(15, 23, 42, 0.14)); border-radius: 6px; }
+  .visual-note { font-size: 0.76rem; color: var(--muted); }
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+    .visual { order: -1; }
+    .visual svg { width: min(100%, 12rem); }
+  }
+</style>

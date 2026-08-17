@@ -1,0 +1,62 @@
+---
+import { NAV_LINKS, SITE } from '../../lib/config/site';
+const path = Astro.url.pathname;
+const isHome = path === '/' || path === '';
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="/">
+      <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="currentColor"></rect>
+        <g fill="#fff">
+          <rect x="7" y="7" width="8" height="5.5" rx="1"></rect>
+          <rect x="17" y="7" width="8" height="5.5" rx="1"></rect>
+          <rect x="7" y="14.5" width="18" height="6.5" rx="1"></rect>
+          <rect x="7" y="23" width="8.5" height="4" rx="1"></rect>
+          <rect x="17.5" y="23" width="7.5" height="4" rx="1"></rect>
+        </g>
+      </svg>
+      <span>{SITE.name}</span>
+    </a>
+
+    <nav aria-label="Secciones">
+      {isHome && NAV_LINKS.map((link) => <a href={link.href}>{link.label}</a>)}
+    </nav>
+
+    <a class="btn btn-primary btn-sm" href="/herramienta">Usar la herramienta</a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar { display: flex; align-items: center; gap: 1.5rem; min-height: 3.9rem; }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .brand svg { color: var(--accent); flex: none; }
+  /* Sin margen automático aquí: el botón es el que empuja hacia la derecha,
+     así queda pegado al borde tanto en la portada (con menú) como en el
+     resto de páginas (sin menú). */
+  nav { display: flex; gap: 1.4rem; }
+  nav a { color: var(--muted); text-decoration: none; font-size: 0.9rem; }
+  nav a:hover { color: var(--ink); }
+  .btn-sm { padding: 0.5rem 1rem; font-size: 0.88rem; margin-inline-start: auto; }
+  @media (max-width: 780px) {
+    nav { display: none; }
+    .brand span { font-size: 0.95rem; }
+  }
+</style>

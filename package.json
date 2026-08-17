@@ -1,0 +1,28 @@
+{
+  "name": "imagenes-por-hoja",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Acomoda varias imagenes en una hoja para imprimir, automaticamente y desde el navegador.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.4.2",
+    "@astrojs/sitemap": "^3.7.0",
+    "astro": "^5.16.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  },
+  "engines": { "node": ">=20.3.0" }
+}

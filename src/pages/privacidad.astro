@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../lib/config/site';
+
+const updated = '17 de agosto de 2026';
+---
+
+<BaseLayout
+  title="Aviso de privacidad"
+  description="Cómo trata tus datos Imágenes por Hoja: tus imágenes se procesan en tu propio navegador y nunca se envían a ningún servidor."
+  path="/privacidad"
+>
+  <section class="section">
+    <div class="wrap prose">
+      <h1>Aviso de privacidad</h1>
+      <p class="lead">Última actualización: {updated}</p>
+
+      <h2>Lo esencial</h2>
+      <p>
+        Las imágenes que cargas en {SITE.name} <strong>no se suben a ningún servidor</strong>. Todo
+        el procesamiento (leer los archivos, calcular el acomodo, generar el PDF o el documento de
+        Word) ocurre dentro de tu navegador, en tu propio dispositivo.
+      </p>
+
+      <h2>Qué datos recopilamos</h2>
+      <ul>
+        <li><strong>Tus imágenes:</strong> ninguna. Nunca salen de tu equipo.</li>
+        <li><strong>Cuenta de usuario:</strong> no existe. No pedimos correo, nombre ni contraseña.</li>
+        <li>
+          <strong>Datos técnicos del alojamiento:</strong> nuestro proveedor de hosting registra de
+          forma automática peticiones al sitio (dirección IP, navegador, página visitada) para
+          operar el servicio y protegerlo de abusos.
+        </li>
+      </ul>
+
+      <h2>Cookies</h2>
+      <p>
+        El sitio no instala cookies de seguimiento ni de perfilado. Si en el futuro se incorpora
+        publicidad o analítica, este aviso se actualizará antes de activarlas y se te pedirá
+        consentimiento cuando la ley lo exija.
+      </p>
+
+      <h2>Servicios de terceros</h2>
+      <p>
+        El sitio se aloja en una plataforma de terceros que actúa como proveedor de infraestructura.
+        No compartimos con nadie información sobre tus imágenes, porque no la tenemos.
+      </p>
+
+      <h2>Tus derechos</h2>
+      <p>
+        Como no almacenamos datos personales, no hay información que rectificar o eliminar. Si
+        tienes cualquier duda sobre este aviso, puedes escribirnos desde la página de contacto o el
+        repositorio del proyecto.
+      </p>
+
+      <h2>Cambios</h2>
+      <p>
+        Si este aviso cambia, se publicará la nueva versión en esta misma dirección con su fecha de
+        actualización.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
