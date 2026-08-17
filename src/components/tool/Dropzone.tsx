@@ -33,7 +33,7 @@ export function Dropzone({ onFiles, onClear, count }: Props) {
         onDragLeave={() => setOver(false)}
         onDrop={handleDrop}
       >
-        Arrastra tus imágenes aquí
+        Arrastra tus imágenes
         <span>o haz clic para elegirlas</span>
       </button>
 

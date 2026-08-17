@@ -1,60 +1,104 @@
 ---
-const pains = [
+/**
+ * El problema, contado como una comparación directa entre hacerlo a mano
+ * en Word y hacerlo aquí. La estructura de dos columnas es el contenido:
+ * es literalmente un antes y un después.
+ */
+const comparison = [
   {
-    title: 'Arrastrar imágenes en Word se lleva la tarde',
-    text: 'Cambias el tamaño de una y se recorren todas. Ajustas el ajuste de texto, vuelves a empezar, y al final una se pasa a la hoja siguiente.',
+    manual: 'Insertas cada imagen y la vas estirando a ojo hasta que parezca que caben.',
+    auto: 'Escribes el número de imágenes y el tamaño se calcula solo.',
   },
   {
-    title: 'Nunca caben las que necesitas',
-    text: 'Si son siete, alguien tiene que decidir a ojo qué tan grande va cada una. Y cuando mezclas fotos verticales con horizontales, el cálculo cambia por completo.',
+    manual: 'Mueves una y se recorren todas. La séptima se pasa a la hoja siguiente.',
+    auto: 'Todas caben en la hoja, siempre. Es la condición de partida del cálculo.',
   },
   {
-    title: 'Se desperdicia papel y tinta',
-    text: 'Acomodar a ojo deja franjas en blanco enormes. Si son cien fotos, son decenas de hojas de más.',
+    manual: 'Mezclar fotos verticales con horizontales obliga a empezar de nuevo.',
+    auto: 'El acomodo se calcula a partir de las proporciones reales de tus imágenes.',
   },
   {
-    title: 'Las fotos salen estiradas',
-    text: 'Forzar una imagen a un cuadro que no le corresponde la deforma, y al imprimir se nota muchísimo.',
+    manual: 'Para que cuadre, alguna termina estirada o aplastada.',
+    auto: 'Ninguna se deforma: cada una conserva su proporción original.',
+  },
+  {
+    manual: 'Quedan franjas en blanco enormes; con cien fotos son decenas de hojas de más.',
+    auto: 'Se busca el reparto que cubre más superficie útil de la hoja.',
   },
 ];
 ---
 
-<section class="section" id="que-resuelve">
+<section class="section section--tint section--ruled" id="que-resuelve">
   <div class="wrap">
     <div class="section-head">
-      <span class="eyebrow">El problema</span>
-      <h2>Acomodar imágenes a mano es un trabajo repetitivo y lento</h2>
-      <p>
-        Imprimir varias fotos en una sola hoja parece sencillo hasta que lo intentas: es un
-        rompecabezas de proporciones, márgenes y milímetros que hay que resolver a mano cada vez.
+      <p class="tag">El problema</p>
+      <h2>Acomodar imágenes a mano es un rompecabezas de milímetros</h2>
+      <p class="lead">
+        Imprimir varias fotos en una hoja parece sencillo hasta que lo intentas. Esto es lo que
+        cambia.
       </p>
     </div>
 
-    <div class="cards">
+    <div class="compare">
+      <div class="compare-head">
+        <span class="col-tag col-tag--manual">A mano, en Word</span>
+        <span class="col-tag col-tag--auto">Aquí</span>
+      </div>
+
       {
-        pains.map((pain) => (
-          <article class="card">
-            <h3>{pain.title}</h3>
-            <p>{pain.text}</p>
-          </article>
+        comparison.map((row) => (
+          <div class="compare-row">
+            <p class="cell cell--manual">{row.manual}</p>
+            <p class="cell cell--auto">{row.auto}</p>
+          </div>
         ))
       }
     </div>
-
-    <p class="closing">
-      Esta herramienta hace ese cálculo por ti en el momento: tú eliges cuántas imágenes van por
-      hoja y ella decide el acomodo que mejor aprovecha el papel.
-    </p>
   </div>
 </section>
 
 <style>
-  .closing {
-    margin: 2rem 0 0;
-    font-size: 1.05rem;
-    color: var(--ink);
-    max-width: 44rem;
-    border-left: 3px solid var(--accent);
-    padding-left: 1rem;
+  .compare { border-top: 1.5px solid var(--ink); }
+
+  .compare-head,
+  .compare-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1rem, 4vw, 3rem);
+  }
+
+  .compare-head { padding: 0.7rem 0; border-bottom: 1px solid var(--rule); }
+
+  .col-tag {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .col-tag--manual { color: var(--ink-soft); }
+  .col-tag--auto { color: var(--magenta); }
+
+  .compare-row { padding: 1.05rem 0; border-bottom: 1px solid var(--rule); }
+
+  .cell { margin: 0; font-size: 0.95rem; line-height: 1.55; }
+  .cell--manual { color: var(--ink-soft); }
+  .cell--auto { color: var(--ink); }
+
+  @media (max-width: 720px) {
+    .compare-head { display: none; }
+    .compare-row { grid-template-columns: 1fr; gap: 0.5rem; padding: 1.1rem 0; }
+    .cell { padding-left: 1.6rem; position: relative; }
+    .cell::before {
+      position: absolute;
+      left: 0;
+      top: 0.05rem;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+    .cell--manual::before { content: 'A MANO'; color: var(--ink-soft); font-size: 0.5rem; top: 0.3rem; }
+    .cell--auto::before { content: 'AQUÍ'; color: var(--magenta); font-size: 0.5rem; top: 0.3rem; }
   }
 </style>

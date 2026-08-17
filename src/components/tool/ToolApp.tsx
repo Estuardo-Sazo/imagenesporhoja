@@ -79,10 +79,10 @@ export default function ToolApp() {
             disabled={!ready || state.busy}
             onClick={() => window.print()}
           >
-            Imprimir o guardar en PDF
+            Imprimir / PDF
           </button>
           <button type="button" disabled={!ready || state.busy} onClick={handleDocx}>
-            {state.busy ? 'Generando…' : 'Descargar Word (.docx)'}
+            {state.busy ? 'Generando…' : 'Descargar Word'}
           </button>
         </div>
         <p className="hint">
@@ -114,8 +114,8 @@ export default function ToolApp() {
         ) : (
           <div className="empty-state">
             <p>
-              Aquí verás la hoja tal como se va a imprimir, con los márgenes marcados y las imágenes
-              ya acomodadas.
+              Aquí aparecerá el pliego: la hoja tal como se va a imprimir, con los márgenes marcados y
+              las imágenes ya acomodadas.
             </p>
           </div>
         )}

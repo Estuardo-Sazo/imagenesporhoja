@@ -12,10 +12,11 @@ const description =
   <section class="tool-page">
     <div class="wrap">
       <header class="tool-intro">
+        <p class="tag">Herramienta</p>
         <h1>Acomoda tus imágenes en una hoja</h1>
-        <p>
-          Carga las imágenes, escribe cuántas quieres por página y revisa la vista previa. Todo se
-          procesa en tu navegador: tus archivos no salen de este dispositivo.
+        <p class="lead">
+          Carga las imágenes, escribe cuántas quieres por página y revisa el pliego. Todo se procesa
+          en tu navegador: tus archivos no salen de este equipo.
         </p>
       </header>
 
@@ -29,10 +30,10 @@ const description =
 </BaseLayout>
 
 <style>
-  .tool-page { padding: 2rem 0 3.5rem; }
-  .tool-intro { max-width: 42rem; margin-bottom: 1.75rem; }
-  .tool-intro h1 { font-size: clamp(1.6rem, 3.6vw, 2.2rem); }
-  .tool-intro p { color: var(--ink-soft); margin: 0; }
+  .tool-page { padding-block: clamp(2rem, 4vw, 3rem) clamp(3rem, 6vw, 4.5rem); }
+  .tool-intro { max-width: 44rem; margin-bottom: 2rem; }
+  .tool-intro h1 { font-size: clamp(1.9rem, 4vw, 2.7rem); margin-bottom: 0.7rem; }
+
   @media print {
     .tool-page { padding: 0; }
     .wrap { width: 100%; }

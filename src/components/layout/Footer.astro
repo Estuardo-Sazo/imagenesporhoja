@@ -5,26 +5,36 @@ const year = new Date().getFullYear();
 
 <footer class="site-footer">
   <div class="wrap inner">
-    <p class="tagline">
-      <strong>{SITE.name}</strong> · Acomoda tus imágenes en una hoja y mándalas a imprimir en
-      segundos. Gratis y sin registro.
+    <p class="claim">
+      Acomoda tus imágenes en una hoja y mándalas a imprimir. Gratis, sin registro y sin que tus
+      archivos salgan de tu equipo.
     </p>
+
     <nav aria-label="Enlaces del pie">
       <a href="/herramienta">Herramienta</a>
       <a href="/#como-funciona">Cómo funciona</a>
+      <a href="/#preguntas">Preguntas</a>
       <a href="/privacidad">Privacidad</a>
       <a href="/terminos">Términos</a>
     </nav>
-    <p class="legal">© {year} {SITE.name}. Tus imágenes nunca salen de tu dispositivo.</p>
+
+    <p class="legal">© {year} {SITE.name}</p>
   </div>
 </footer>
 
 <style>
-  .site-footer { border-top: 1px solid var(--line); background: var(--surface-alt); padding: 2.5rem 0; }
-  .inner { display: grid; gap: 0.9rem; }
-  .tagline { margin: 0; color: var(--ink-soft); max-width: 40rem; font-size: 0.95rem; }
-  nav { display: flex; flex-wrap: wrap; gap: 1.2rem; }
-  nav a { color: var(--muted); text-decoration: none; font-size: 0.9rem; }
-  nav a:hover { color: var(--accent-strong); text-decoration: underline; }
-  .legal { margin: 0; font-size: 0.8rem; color: var(--muted); }
+  .site-footer { border-top: 1px solid var(--rule); padding-block: 2.75rem 2.25rem; }
+  .inner { display: grid; gap: 1.4rem; }
+  .claim { margin: 0; max-width: 34rem; font-size: 0.92rem; color: var(--ink-mid); }
+  nav { display: flex; flex-wrap: wrap; gap: 1.4rem; }
+  nav a {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  nav a:hover { color: var(--magenta); }
+  .legal { margin: 0; font-family: var(--font-mono); font-size: 0.66rem; color: var(--ink-soft); }
 </style>

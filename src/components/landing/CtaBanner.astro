@@ -4,24 +4,36 @@ interface Props {
   text?: string;
 }
 const {
-  title = '¿Listo para dejar de acomodar imágenes a mano?',
-  text = 'Abre la herramienta, carga tus imágenes y dinos cuántas quieres por hoja. No hay que registrarse ni instalar nada.',
+  title = 'Tus imágenes, en una hoja, ahora',
+  text = 'Cargas, escribes el número y listo. Sin registro, sin instalar nada y sin que tus archivos salgan de tu equipo.',
 } = Astro.props;
 ---
 
-<section class="cta-banner">
-  <div class="wrap inner">
+<section class="cta">
+  <div class="wrap cta-inner">
     <div>
       <h2>{title}</h2>
       <p>{text}</p>
     </div>
-    <a class="btn btn-primary" href="/herramienta">Usar la herramienta</a>
+    <a class="btn btn--accent" href="/herramienta">Acomodar mis imágenes</a>
   </div>
 </section>
 
 <style>
-  .cta-banner { background: var(--accent-soft); border-top: 1px solid var(--line); padding: clamp(2.5rem, 6vw, 4rem) 0; }
-  .inner { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between; }
-  .inner h2 { margin-bottom: 0.35rem; }
-  .inner p { margin: 0; color: var(--ink-soft); max-width: 34rem; }
+  .cta {
+    background: var(--ink);
+    color: var(--paper);
+    padding-block: clamp(3rem, 7vw, 5rem);
+  }
+  .cta-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .cta h2 { color: var(--paper); margin-bottom: 0.5rem; max-width: 18ch; }
+  .cta p { margin: 0; max-width: 44ch; color: #b9bcc2; font-size: 0.97rem; }
+  .cta .btn--accent { border-color: var(--magenta); }
+  .cta .btn--accent:hover { background: var(--paper); border-color: var(--paper); color: var(--ink); }
 </style>

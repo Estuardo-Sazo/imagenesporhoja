@@ -2,18 +2,21 @@
 import { FAQ_ITEMS } from '../../lib/config/faq';
 ---
 
-<section class="section" id="preguntas">
-  <div class="wrap">
+<section class="section section--tint section--ruled" id="preguntas">
+  <div class="wrap faq-grid">
     <div class="section-head">
-      <span class="eyebrow">Preguntas frecuentes</span>
-      <h2>Dudas comunes</h2>
+      <p class="tag">Preguntas</p>
+      <h2>Dudas frecuentes</h2>
     </div>
 
     <div class="faq">
       {
-        FAQ_ITEMS.map((item) => (
+        FAQ_ITEMS.map((item, index) => (
           <details>
-            <summary>{item.question}</summary>
+            <summary>
+              <span class="q-no">{String(index + 1).padStart(2, '0')}</span>
+              <span class="q-text">{item.question}</span>
+            </summary>
             <p>{item.answer}</p>
           </details>
         ))
@@ -23,20 +26,61 @@ import { FAQ_ITEMS } from '../../lib/config/faq';
 </section>
 
 <style>
-  .faq { max-width: 46rem; border-top: 1px solid var(--line); }
-  details { border-bottom: 1px solid var(--line); }
+  .faq-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: start;
+  }
+  .faq-grid .section-head { margin-bottom: 0; position: sticky; top: 5rem; }
+
+  .faq { border-top: 1.5px solid var(--ink); }
+  details { border-bottom: 1px solid var(--rule); }
+
   summary {
-    cursor: pointer;
-    padding: 1.05rem 0;
-    font-weight: 600;
-    list-style: none;
     display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    align-items: center;
+    gap: 0.9rem;
+    align-items: baseline;
+    padding: 1rem 0;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 500;
   }
   summary::-webkit-details-marker { display: none; }
-  summary::after { content: '+'; color: var(--accent); font-size: 1.3rem; font-weight: 400; line-height: 1; }
-  details[open] summary::after { content: '−'; }
-  details p { margin: 0 0 1.05rem; color: var(--ink-soft); font-size: 0.96rem; max-width: 42rem; }
+
+  .q-no {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--ink-soft);
+    flex: none;
+    padding-top: 0.15rem;
+  }
+  .q-text { flex: 1; }
+  summary::after {
+    content: '+';
+    font-family: var(--font-mono);
+    color: var(--magenta);
+    font-size: 1.05rem;
+    line-height: 1;
+    flex: none;
+  }
+  details[open] summary::after { content: '–'; }
+  details[open] .q-text { color: var(--magenta-deep); }
+
+  details p {
+    margin: 0 0 1.15rem;
+    padding-left: 2.35rem;
+    max-width: 46ch;
+    font-size: 0.93rem;
+    line-height: 1.6;
+    color: var(--ink-mid);
+  }
+
+  @media (max-width: 900px) {
+    .faq-grid { grid-template-columns: 1fr; }
+    .faq-grid .section-head { position: static; margin-bottom: 1.5rem; }
+  }
+  @media (max-width: 520px) {
+    details p { padding-left: 0; }
+  }
 </style>

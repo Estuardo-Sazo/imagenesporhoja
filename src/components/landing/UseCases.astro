@@ -1,47 +1,50 @@
 ---
 const cases = [
-  {
-    title: 'Informes y expedientes con fotos',
-    text: 'Reportes de obra, inspecciones, peritajes o bitácoras donde hay que documentar con varias fotografías por página.',
-  },
-  {
-    title: 'Tareas y trabajos escolares',
-    text: 'Láminas, collages y trabajos que piden un número exacto de imágenes por hoja.',
-  },
-  {
-    title: 'Impresión de fotos en casa',
-    text: 'Aprovecha cada hoja de papel fotográfico colocando varias fotos del mismo tamaño.',
-  },
-  {
-    title: 'Catálogos y listas de productos',
-    text: 'Hojas de muestra para clientes, inventarios visuales o menús con imágenes.',
-  },
-  {
-    title: 'Material para imprimir y recortar',
-    text: 'Etiquetas, tarjetas, gafetes o fichas: varias copias por hoja sin desperdiciar papel.',
-  },
-  {
-    title: 'Cibercafés y papelerías',
-    text: 'Resuelve en un minuto el clásico "necesito estas fotos en una hoja" sin instalar programas en la computadora del negocio.',
-  },
+  { who: 'Informes con fotos', what: 'Reportes de obra, inspecciones, peritajes y bitácoras que documentan con varias fotografías por página.' },
+  { who: 'Tareas escolares', what: 'Láminas y trabajos que piden un número exacto de imágenes por hoja.' },
+  { who: 'Fotos en casa', what: 'Aprovechar cada hoja de papel fotográfico con varias fotos del mismo tamaño.' },
+  { who: 'Catálogos', what: 'Hojas de muestra para clientes, inventarios visuales y menús con imágenes.' },
+  { who: 'Recortables', what: 'Etiquetas, tarjetas, gafetes y fichas: varias copias por hoja sin desperdiciar papel.' },
+  { who: 'Cibercafés y papelerías', what: 'Resolver en un minuto el clásico "necesito estas fotos en una hoja", sin instalar nada en la máquina del negocio.' },
 ];
 ---
 
-<section class="section section-alt" id="casos">
+<section class="section" id="casos">
   <div class="wrap">
     <div class="section-head">
-      <span class="eyebrow">Para qué sirve</span>
+      <p class="tag">Para qué sirve</p>
       <h2>Quién la usa todos los días</h2>
     </div>
-    <div class="cards">
+
+    <ul class="cases">
       {
         cases.map((item) => (
-          <article class="card">
-            <h3>{item.title}</h3>
-            <p>{item.text}</p>
-          </article>
+          <li>
+            <h3>{item.who}</h3>
+            <p>{item.what}</p>
+          </li>
         ))
       }
-    </div>
+    </ul>
   </div>
 </section>
+
+<style>
+  .cases {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    column-gap: clamp(1.5rem, 4vw, 3rem);
+  }
+  .cases li { padding: 1.1rem 0; border-top: 1px solid var(--rule); }
+  .cases li:first-child { border-top-color: var(--ink); border-top-width: 1.5px; }
+  .cases h3 { margin-bottom: 0.25rem; }
+  .cases p { font-size: 0.92rem; color: var(--ink-mid); line-height: 1.55; }
+
+  @media (min-width: 48rem) {
+    .cases li:nth-child(2),
+    .cases li:nth-child(3) { border-top-color: var(--ink); border-top-width: 1.5px; }
+  }
+</style>

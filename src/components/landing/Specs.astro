@@ -1,0 +1,77 @@
+---
+/**
+ * Las prestaciones como ficha técnica, no como tarjetas.
+ * Los valores de la izquierda son datos concretos; el formato de tabla
+ * es el que corresponde a un producto que se mide en milímetros.
+ */
+const specs = [
+  { key: 'Imágenes por hoja', value: '1 – 40', note: 'El número lo eliges tú; caben todas.' },
+  { key: 'Tamaños de papel', value: 'Carta · A4 · Oficio · F4 · A5 · Tabloide', note: 'Vertical u horizontal.' },
+  { key: 'Márgenes', value: '0 – 8 cm', note: 'Los cuatro lados por separado, en pasos de 1 mm.' },
+  { key: 'Separación entre imágenes', value: '0 – 5 cm', note: 'En pasos de medio milímetro.' },
+  { key: 'Proporción', value: 'Intacta', note: 'O rellenar recortando bordes, si lo prefieres.' },
+  { key: 'Salidas', value: 'Impresión · PDF · Word (.docx)', note: 'El .docx queda editable.' },
+  { key: 'Resolución al exportar', value: '150 · 200 · 300 ppp', note: 'Suficiente para impresión fotográfica.' },
+  { key: 'Formatos que lee', value: 'JPG · PNG · WEBP · GIF · BMP · AVIF', note: 'HEIC del iPhone hay que convertirlo antes.' },
+  { key: 'Archivos enviados a un servidor', value: 'Ninguno', note: 'Todo se procesa en tu propio navegador.' },
+  { key: 'Costo y registro', value: 'Sin costo, sin cuenta', note: 'Tampoco hay marcas de agua ni límites.' },
+];
+---
+
+<section class="section section--tint section--ruled" id="caracteristicas">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="tag">Ficha técnica</p>
+      <h2>Lo que hace, en números</h2>
+    </div>
+
+    <dl class="specs">
+      {
+        specs.map((spec) => (
+          <div class="spec">
+            <dt>{spec.key}</dt>
+            <dd class="spec-value">{spec.value}</dd>
+            <dd class="spec-note">{spec.note}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .specs { margin: 0; border-top: 1.5px solid var(--ink); }
+
+  .spec {
+    display: grid;
+    grid-template-columns: minmax(9rem, 15rem) minmax(10rem, 20rem) 1fr;
+    gap: clamp(0.75rem, 3vw, 2rem);
+    align-items: baseline;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .spec dt {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .spec dd { margin: 0; }
+  .spec-value {
+    font-family: var(--font-display);
+    font-stretch: 106%;
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--ink);
+  }
+  .spec-note { font-size: 0.88rem; color: var(--ink-mid); }
+
+  @media (max-width: 780px) {
+    .spec { grid-template-columns: 1fr; gap: 0.15rem; padding: 1rem 0; }
+    .spec dt { margin-bottom: 0.2rem; }
+  }
+</style>

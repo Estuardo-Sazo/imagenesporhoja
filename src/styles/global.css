@@ -1,115 +1,206 @@
-/* Tokens de diseño y estilos base compartidos por todo el sitio. */
+/* ------------------------------------------------------------------ *
+ * Sistema de diseño: "hoja de imposición".
+ *
+ * La identidad sale del mundo del producto: la preimpresión. Papel como
+ * fondo, tinta negra para el texto, magenta de proceso como único acento
+ * y cian reservado para la capa técnica (guías de margen, cotas, marcas
+ * de corte). Las medidas y etiquetas van en monoespaciada, como las
+ * anotaciones de un pliego de imprenta.
+ * ------------------------------------------------------------------ */
+
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/600.css';
 
 :root {
-  --ink: #0f172a;
-  --ink-soft: #334155;
-  --muted: #64748b;
-  --surface: #ffffff;
-  --surface-alt: #f6f7f9;
-  --line: #e2e8f0;
-  --line-strong: #cbd5e1;
-  --accent: #2563eb;
-  --accent-strong: #1d4ed8;
-  --accent-soft: #eff6ff;
-  --radius: 0.6rem;
-  --radius-lg: 1rem;
-  --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
-  --wrap: 68rem;
-  --font: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* Tintas */
+  --paper: #fcfcfa;
+  --paper-2: #eff0ec;
+  --ink: #15171b;
+  --ink-mid: #565b64;
+  --ink-soft: #878c95;
+  --rule: #d9dad4;
+  --rule-soft: #e8e9e4;
+  --magenta: #d6006c;
+  --magenta-deep: #a80055;
+  --magenta-wash: #fdeef5;
+  --cyan: #0091c7;
+  --cyan-deep: #00688f;
+
+  /* Tipografía */
+  --font-display: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --font-body: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Retícula */
+  --wrap: 72rem;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --section-y: clamp(3.5rem, 9vw, 7rem);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
 
 body {
   margin: 0;
-  font-family: var(--font);
-  font-size: 1rem;
-  line-height: 1.65;
+  background: var(--paper);
   color: var(--ink);
-  background: var(--surface);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3 { line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 0.6rem; }
-h1 { font-size: clamp(2rem, 5vw, 3.05rem); }
-h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); }
-h3 { font-size: 1.12rem; }
+/* --- Tipografía --- *
+ * El display usa el eje de ancho de Archivo (wdth 112): una grotesca
+ * ensanchada, como los títulos impresos de un pliego, no la serif de
+ * alto contraste de siempre. */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-stretch: 112%;
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+  margin: 0 0 0.5em;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(2.35rem, 6.4vw, 4.1rem); }
+h2 { font-size: clamp(1.85rem, 4.2vw, 2.85rem); }
+h3 { font-size: 1.06rem; font-stretch: 106%; letter-spacing: -0.012em; }
+
 p { margin: 0 0 1rem; }
-a { color: var(--accent-strong); }
+p:last-child { margin-bottom: 0; }
+
+a { color: var(--magenta-deep); text-underline-offset: 0.18em; }
+
+strong { font-weight: 600; }
 
 img { max-width: 100%; height: auto; }
 
-.wrap { width: min(100% - 2.5rem, var(--wrap)); margin-inline: auto; }
-.section { padding: clamp(3rem, 7vw, 5rem) 0; }
-.section-alt { background: var(--surface-alt); border-block: 1px solid var(--line); }
-.section-head { max-width: 42rem; margin-bottom: 2.5rem; }
-.section-head p { color: var(--ink-soft); font-size: 1.05rem; margin: 0; }
-.eyebrow {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--accent-strong);
-  margin-bottom: 0.6rem;
-}
-.lead { font-size: 1.15rem; color: var(--ink-soft); }
+/* --- Utilidades de composición --- */
+.wrap { width: min(100% - var(--gutter) * 2, var(--wrap)); margin-inline: auto; }
+.section { padding-block: var(--section-y); }
+.section--tint { background: var(--paper-2); }
+.section--ruled { border-top: 1px solid var(--rule); }
 
+.lead {
+  font-size: clamp(1.06rem, 1.9vw, 1.22rem);
+  line-height: 1.5;
+  color: var(--ink-mid);
+  max-width: 40ch;
+}
+
+/* Etiqueta técnica: el equivalente al rótulo de una cota */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--magenta);
+  margin: 0 0 1.1rem;
+}
+.tag::before {
+  content: '';
+  width: 1.6rem;
+  height: 2px;
+  background: var(--magenta);
+}
+.tag--cyan { color: var(--cyan-deep); }
+.tag--cyan::before { background: var(--cyan); }
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.section-head { max-width: 46rem; margin-bottom: clamp(2rem, 4vw, 3.25rem); }
+.section-head .lead { max-width: 46ch; }
+
+/* --- Botones --- */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.8rem 1.5rem;
-  border: 1px solid transparent;
-  border-radius: 0.55rem;
+  gap: 0.55rem;
+  padding: 0.85rem 1.6rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
   font-weight: 600;
-  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
 }
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: var(--accent-strong); transform: translateY(-1px); }
-.btn-ghost { background: var(--surface); color: var(--ink); border-color: var(--line-strong); }
-.btn-ghost:hover { background: var(--surface-alt); }
+.btn:hover { background: var(--magenta); border-color: var(--magenta); color: #fff; }
 
-.card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 1.4rem;
+.btn--accent { background: var(--magenta); border-color: var(--magenta); color: #fff; }
+.btn--accent:hover { background: var(--ink); border-color: var(--ink); }
+
+.btn--quiet { background: transparent; color: var(--ink); }
+.btn--quiet:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+.btn--sm { padding: 0.55rem 1.05rem; font-size: 0.7rem; }
+
+/* --- Texto largo (privacidad, términos) --- */
+.prose { max-width: 42rem; }
+.prose h1 { margin-bottom: 0.7rem; }
+.prose h2 {
+  font-size: 1.28rem;
+  margin-top: 2.6rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--rule);
 }
-.card h3 { margin-bottom: 0.35rem; }
-.card p { margin: 0; color: var(--ink-soft); font-size: 0.94rem; }
+.prose p, .prose li { color: var(--ink-mid); }
+.prose ul { padding-left: 1.1rem; }
+.prose li { margin-bottom: 0.45rem; }
 
-.cards { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); }
-
-.prose { max-width: 44rem; }
-.prose h2 { margin-top: 2.4rem; font-size: 1.4rem; }
-.prose ul { padding-left: 1.15rem; color: var(--ink-soft); }
-.prose li { margin-bottom: 0.4rem; }
-
-:where(a, button, input, select, summary):focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 0.3rem;
+/* --- Accesibilidad --- */
+:where(a, button, input, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--magenta);
+  outline-offset: 3px;
 }
 
 .skip-link {
   position: absolute;
   left: -9999px;
-  top: 0;
-  background: var(--accent);
-  color: #fff;
+  background: var(--ink);
+  color: var(--paper);
   padding: 0.6rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   z-index: 100;
 }
-.skip-link:focus { left: 0.5rem; top: 0.5rem; }
+.skip-link:focus { left: 0.75rem; top: 0.75rem; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

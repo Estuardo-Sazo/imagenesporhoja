@@ -1,86 +1,108 @@
 ---
+/**
+ * Los pasos van numerados porque aquí el orden sí es información:
+ * es una secuencia real que la persona recorre de principio a fin.
+ */
 const steps = [
   {
-    n: '1',
-    title: 'Carga tus imágenes',
-    text: 'Arrástralas a la página o elige una carpeta completa. Puedes reordenarlas arrastrando las miniaturas y girar las que salieron de lado.',
+    title: 'Carga las imágenes',
+    text: 'Arrástralas a la página o elige una carpeta entera. Puedes reordenarlas arrastrando las miniaturas y girar las que salieron de lado.',
   },
   {
-    n: '2',
     title: 'Di cuántas van por hoja',
-    text: 'Escribe el número, por ejemplo 7. Ajusta el tamaño de papel, la orientación, los márgenes y la separación entre imágenes si lo necesitas.',
+    text: 'Escribe el número. Ajusta tamaño de papel, orientación, márgenes y separación si lo necesitas.',
   },
   {
-    n: '3',
-    title: 'Revisa la vista previa',
-    text: 'Verás la hoja tal cual va a salir impresa, a escala real y con los márgenes marcados. Si cambias algo, se recalcula al instante.',
+    title: 'Revisa el pliego',
+    text: 'Ves la hoja tal como saldrá impresa, a escala real y con los márgenes marcados. Cambia cualquier cosa y se recalcula al instante.',
   },
   {
-    n: '4',
     title: 'Imprime o descarga',
-    text: 'Manda a imprimir directo, guarda un PDF desde el diálogo de impresión o descarga un documento de Word con todo ya acomodado.',
+    text: 'Manda a imprimir, guarda un PDF desde el diálogo de impresión o baja un documento de Word con todo ya acomodado.',
   },
 ];
 ---
 
-<section class="section section-alt" id="como-funciona">
+<section class="section" id="como-funciona">
   <div class="wrap">
     <div class="section-head">
-      <span class="eyebrow">Cómo funciona</span>
-      <h2>Cuatro pasos y ni una sola imagen movida a mano</h2>
-      <p>De la carpeta a la impresora en menos de un minuto, aunque sean cien fotos.</p>
+      <p class="tag">Cómo funciona</p>
+      <h2>Cuatro pasos y ni una imagen movida a mano</h2>
+      <p class="lead">De la carpeta a la impresora en menos de un minuto, aunque sean cien fotos.</p>
     </div>
 
     <ol class="steps">
       {
-        steps.map((step) => (
-          <li>
-            <span class="badge">{step.n}</span>
-            <div>
-              <h3>{step.title}</h3>
-              <p>{step.text}</p>
-            </div>
+        steps.map((step, index) => (
+          <li class="step">
+            <span class="step-no">{String(index + 1).padStart(2, '0')}</span>
+            <h3>{step.title}</h3>
+            <p>{step.text}</p>
           </li>
         ))
       }
     </ol>
 
-    <div class="explainer">
-      <h3>Qué hace por dentro</h3>
+    <aside class="engine">
+      <p class="tag tag--cyan">Por dentro</p>
+      <h3>No es una cuadrícula fija</h3>
       <p>
-        No usa una cuadrícula fija. Prueba <strong>todas las formas posibles</strong> de repartir tus
-        imágenes en filas respetando el orden que elegiste, calcula qué altura tendría cada fila al
-        ocupar el ancho completo de la hoja y se queda con la combinación que cubre más superficie
-        sin deformar nada.
+        El programa prueba <strong>todas las formas posibles</strong> de repartir tus imágenes en
+        filas respetando el orden que elegiste. Para cada reparto calcula qué altura tendría cada
+        fila al ocupar el ancho completo de la hoja, y se queda con la combinación que cubre más
+        superficie sin deformar nada.
       </p>
       <p>
-        Por eso, cuando mezclas fotos verticales con horizontales, puede armar una fila de tres y
-        dos de dos en lugar de obligarte a una cuadrícula de 3 × 3 con huecos. Un control de
-        equilibrio evita el otro extremo: que una imagen salga enorme y las demás diminutas.
+        Por eso, con fotos verticales y horizontales mezcladas puede armar una fila de tres y dos de
+        dos, en lugar de obligarte a una cuadrícula de 3 × 3 llena de huecos. Un control de
+        equilibrio evita el extremo contrario: que una salga enorme y las demás diminutas.
       </p>
-    </div>
+    </aside>
   </div>
 </section>
 
 <style>
-  .steps { list-style: none; counter-reset: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); }
-  .steps li { display: flex; gap: 0.9rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.3rem; }
-  .badge {
-    flex: none;
-    width: 1.85rem;
-    height: 1.85rem;
-    border-radius: 50%;
-    background: var(--accent);
-    color: #fff;
-    font-weight: 700;
-    font-size: 0.9rem;
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: grid;
-    place-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    border-top: 1.5px solid var(--ink);
   }
-  .steps h3 { font-size: 1rem; margin-bottom: 0.2rem; }
-  .steps p { margin: 0; font-size: 0.92rem; color: var(--ink-soft); }
-  .explainer { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(1.4rem, 3vw, 2rem); max-width: 46rem; }
-  .explainer h3 { margin-bottom: 0.6rem; }
-  .explainer p { color: var(--ink-soft); font-size: 0.96rem; }
-  .explainer p:last-child { margin-bottom: 0; }
+
+  .step {
+    padding: 1.4rem 1.5rem 1.6rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .step + .step { border-left: 1px solid var(--rule); padding-left: 1.5rem; }
+
+  .step-no {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--magenta);
+    margin-bottom: 0.9rem;
+  }
+  .step h3 { margin-bottom: 0.35rem; }
+  .step p { font-size: 0.92rem; line-height: 1.55; color: var(--ink-mid); }
+
+  .engine {
+    margin-top: clamp(2.5rem, 5vw, 3.75rem);
+    max-width: 44rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: var(--paper-2);
+    border-left: 2px solid var(--cyan);
+  }
+  .engine h3 { margin-bottom: 0.6rem; }
+  .engine p { color: var(--ink-mid); font-size: 0.95rem; }
+  .engine p + p { margin-top: 0.85rem; }
+  .engine strong { color: var(--ink); }
+
+  @media (max-width: 620px) {
+    .step,
+    .step + .step { padding-left: 0; border-left: 0; }
+  }
 </style>

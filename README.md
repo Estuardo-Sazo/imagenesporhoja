@@ -58,6 +58,27 @@ tests/               Pruebas con Vitest
 - **Rasterizado antes de exportar.** Cada imagen se dibuja al tamaño exacto que ocupará, con su
   rotación y recorte ya aplicados, para que el documento de Word se vea idéntico a la vista previa.
 
+## Sistema de diseño
+
+La identidad sale del mundo del propio producto: la preimpresión. Papel como fondo, tinta negra
+para el texto, **magenta de proceso** como único acento y **cian** reservado a la capa técnica
+(guías de margen, cotas y marcas de corte). Las medidas y etiquetas van en monoespaciada, como
+las anotaciones de un pliego de imprenta.
+
+- **Color:** `--paper` `#fcfcfa` · `--ink` `#15171b` · `--magenta` `#d6006c` · `--cyan` `#0091c7`.
+  Todos los tokens están en `src/styles/global.css`; ningún componente inventa colores.
+- **Tipografía:** Archivo variable en dos anchos — `font-stretch: 112%` para los títulos (una
+  grotesca ensanchada, no la serif de alto contraste habitual) y ancho normal para el texto —
+  más IBM Plex Mono para cotas, etiquetas y botones. Ambas se sirven desde el propio dominio:
+  no hay peticiones a Google Fonts.
+- **Elemento de firma:** el pliego animado de la portada. Las posiciones de cada marco se
+  calculan en tiempo de compilación con el mismo motor que usa la herramienta, así que lo que
+  se ve es un resultado real del programa, no una ilustración. Al navegador solo le llegan las
+  coordenadas y unas 30 líneas de JavaScript.
+- **Estructura como información:** los pasos van numerados porque son una secuencia real; las
+  prestaciones se presentan como ficha técnica y el problema como comparación a dos columnas,
+  en lugar de repetir tarjetas en toda la página.
+
 ## Cómo funciona el acomodo
 
 El motor no usa una cuadrícula fija. Prueba **todas las formas de repartir las imágenes en filas**

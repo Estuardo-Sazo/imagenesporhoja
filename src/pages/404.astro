@@ -9,12 +9,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 >
   <section class="section">
     <div class="wrap prose">
+      <p class="tag">Error 404</p>
       <h1>No encontramos esa página</h1>
       <p class="lead">Puede que el enlace esté mal escrito o que la página ya no exista.</p>
-      <p>
-        <a class="btn btn-primary" href="/herramienta">Ir a la herramienta</a>
+      <p class="acciones">
+        <a class="btn btn--accent" href="/herramienta">Ir a la herramienta</a>
+        <a class="btn btn--quiet" href="/">Volver al inicio</a>
       </p>
-      <p><a href="/">Volver al inicio</a></p>
     </div>
   </section>
+
+  <style>
+    .acciones { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+  </style>
 </BaseLayout>

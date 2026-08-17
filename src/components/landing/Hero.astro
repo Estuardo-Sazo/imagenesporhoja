@@ -1,66 +1,397 @@
 ---
-/** Portada: promesa clara en una frase y acceso directo a la herramienta. */
+/**
+ * Portada.
+ *
+ * El elemento de firma es un pliego real: las posiciones de cada imagen se
+ * calculan aquí, en tiempo de compilación, con el mismo motor que usa la
+ * herramienta. Al cambiar el número de imágenes por hoja, los marcos se
+ * reacomodan a las posiciones exactas que produciría el programa.
+ *
+ * Al navegador solo le llegan las coordenadas ya resueltas y unas 30 líneas
+ * de JavaScript: la portada no carga ninguna librería.
+ */
+import { computeDocumentLayout } from '../../lib/layout/engine';
+import { uniformMargins } from '../../lib/layout/units';
+import type { Measurable } from '../../lib/layout/types';
+
+/**
+ * Marcos de muestra. Las proporciones son las de una cámara y un teléfono
+ * reales (1:1, 9:16, 4:3, 3:4, 16:9, 2:3) y su orden está elegido para que
+ * las cinco cantidades del demo aprovechen bien la hoja: entre 91 % y 97 %.
+ * Cambiar el orden cambia el resultado, porque el motor respeta la secuencia.
+ */
+const FRAMES = [
+  { ratio: 1, tint: ['#0c4257', '#3f8fae'] },
+  { ratio: 9 / 16, tint: ['#22262d', '#5a5f68'] },
+  { ratio: 4 / 3, tint: ['#8a1152', '#c95b91'] },
+  { ratio: 4 / 3, tint: ['#1d3a52', '#517ea0'] },
+  { ratio: 3 / 4, tint: ['#14495e', '#57a3bd'] },
+  { ratio: 16 / 9, tint: ['#152431', '#41607a'] },
+  { ratio: 9 / 16, tint: ['#7c1146', '#c74d88'] },
+  { ratio: 2 / 3, tint: ['#0d5570', '#3f93b4'] },
+  { ratio: 9 / 16, tint: ['#2b2f36', '#666c76'] },
+  { ratio: 4 / 3, tint: ['#0b6183', '#4fa8c6'] },
+  { ratio: 16 / 9, tint: ['#96185a', '#d4699b'] },
+  { ratio: 2 / 3, tint: ['#3a3f47', '#787d86'] },
+];
+
+const COUNTS = [4, 6, 7, 9, 12];
+
+interface DemoImage extends Measurable {
+  index: number;
+}
+
+const sheets = COUNTS.map((count) => {
+  const images: DemoImage[] = FRAMES.slice(0, count).map((frame, index) => ({
+    naturalWidth: Math.round(frame.ratio * 1000),
+    naturalHeight: 1000,
+    rotation: 0,
+    index,
+  }));
+
+  const layout = computeDocumentLayout(images, {
+    paperId: 'carta',
+    orientation: 'portrait',
+    margins: uniformMargins(10),
+    gapMm: 3,
+    imagesPerPage: count,
+    mode: 'auto',
+    fit: 'contain',
+    balance: 0.25,
+  });
+
+  const page = layout.pages[0]!;
+  return {
+    count,
+    coverage: Math.round(layout.coverage),
+    rows: page.rows.length,
+    items: page.rows
+      .flatMap((row) => row.items)
+      .map((item) => ({
+        i: item.image.index,
+        x: +((item.xMm / layout.pageWidthMm) * 100).toFixed(3),
+        y: +((item.yMm / layout.pageHeightMm) * 100).toFixed(3),
+        w: +((item.widthMm / layout.pageWidthMm) * 100).toFixed(3),
+        h: +((item.heightMm / layout.pageHeightMm) * 100).toFixed(3),
+      })),
+  };
+});
+
+const initial = sheets[2]!; // la hoja de 7, el caso que originó la herramienta
+const marginPct = {
+  x: (10 / 215.9) * 100,
+  y: (10 / 279.4) * 100,
+};
 ---
 
 <section class="hero">
-  <div class="wrap grid">
-    <div class="copy">
-      <span class="eyebrow">Gratis · Sin registro · Sin instalar nada</span>
-      <h1>Varias imágenes en una hoja, acomodadas solas</h1>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="tag">Gratis · Sin registro · Nada se sube a internet</p>
+      <h1>Siete imágenes en una hoja. O las que tú necesites.</h1>
       <p class="lead">
-        Dinos cuántas imágenes quieres por página y calculamos el tamaño y la posición que mejor
-        aprovechan el papel, sin deformar nada y respetando tus márgenes. Después imprimes o
-        descargas el documento de Word.
+        Escribes cuántas van por página y calculamos el tamaño y la posición que mejor aprovechan
+        el papel, sin deformar ninguna y respetando tus márgenes al milímetro.
       </p>
-      <div class="cta">
-        <a class="btn btn-primary" href="/herramienta">Usar la herramienta</a>
-        <a class="btn btn-ghost" href="#como-funciona">Ver cómo funciona</a>
+
+      <div class="hero-actions">
+        <a class="btn btn--accent" href="/herramienta">Acomodar mis imágenes</a>
+        <a class="btn btn--quiet" href="#como-funciona">Ver cómo funciona</a>
       </div>
-      <p class="trust">
-        Tus imágenes <strong>nunca se suben a internet</strong>: todo el trabajo ocurre dentro de tu
-        navegador.
+
+      <p class="hero-note">
+        Funciona en el navegador, también en la computadora del ciber. Tus fotos no salen de tu
+        equipo.
       </p>
     </div>
 
-    <div class="visual" aria-hidden="true">
-      <svg viewBox="0 0 260 336" role="img">
-        <rect x="0" y="0" width="260" height="336" rx="6" fill="#fff" stroke="#e2e8f0"></rect>
-        <rect
-          x="16"
-          y="16"
-          width="228"
-          height="304"
-          fill="none"
-          stroke="#cbd5e1"
-          stroke-dasharray="4 4"></rect>
-        <g>
-          <rect x="16" y="30" width="64" height="86" rx="3" fill="#2563eb" opacity="0.9"></rect>
-          <rect x="86" y="30" width="64" height="86" rx="3" fill="#38bdf8" opacity="0.9"></rect>
-          <rect x="156" y="30" width="88" height="86" rx="3" fill="#0ea5e9" opacity="0.75"></rect>
+    <figure class="imposition" id="imposition">
+      <div class="cote" aria-hidden="true">
+        <span class="cote-line"></span>
+        <span class="cote-label">195.9 mm de ancho útil</span>
+        <span class="cote-line"></span>
+      </div>
 
-          <rect x="16" y="124" width="228" height="98" rx="3" fill="#1d4ed8" opacity="0.85"></rect>
+      <div class="sheet-frame">
+        <span class="crop crop--tl" aria-hidden="true"></span>
+        <span class="crop crop--tr" aria-hidden="true"></span>
+        <span class="crop crop--bl" aria-hidden="true"></span>
+        <span class="crop crop--br" aria-hidden="true"></span>
 
-          <rect x="16" y="230" width="110" height="90" rx="3" fill="#60a5fa" opacity="0.9"></rect>
-          <rect x="134" y="230" width="110" height="90" rx="3" fill="#93c5fd" opacity="0.95"></rect>
-        </g>
-      </svg>
-      <span class="visual-note">7 imágenes en una hoja carta, márgenes de 1 cm</span>
-    </div>
+        <div class="sheet" id="sheet">
+          <span
+            class="margin-box"
+            aria-hidden="true"
+            style={`inset:${marginPct.y}% ${marginPct.x}%`}></span>
+
+          {
+            FRAMES.map((frame, index) => (
+              <span
+                class="frame"
+                data-frame={index}
+                style={`background-image:linear-gradient(148deg, ${frame.tint[0]}, ${frame.tint[1]})`}
+              >
+                <span class="frame-no">{String(index + 1).padStart(2, '0')}</span>
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <figcaption class="sheet-controls">
+        <span class="controls-label" id="counter-label">Imágenes por hoja</span>
+        <span class="controls-buttons" role="group" aria-labelledby="counter-label">
+          {
+            sheets.map((sheet) => (
+              <button
+                type="button"
+                data-count={sheet.count}
+                class:list={['count', { 'is-active': sheet.count === initial.count }]}
+                aria-pressed={sheet.count === initial.count ? 'true' : 'false'}
+              >
+                {sheet.count}
+              </button>
+            ))
+          }
+        </span>
+        <span class="controls-readout">
+          Hoja carta · márgenes de 1 cm · aprovechado
+          <output id="coverage">{initial.coverage} %</output>
+        </span>
+      </figcaption>
+
+      <script
+        type="application/json"
+        id="sheet-data"
+        is:inline
+        set:html={JSON.stringify(sheets)}
+      />
+    </figure>
   </div>
 </section>
 
+<script is:inline>
+  (() => {
+    const root = document.getElementById('imposition');
+    const data = document.getElementById('sheet-data');
+    if (!root || !data) return;
+
+    const sheets = JSON.parse(data.textContent || '[]');
+    const frames = [...root.querySelectorAll('[data-frame]')];
+    const buttons = [...root.querySelectorAll('[data-count]')];
+    const coverage = document.getElementById('coverage');
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function draw(index) {
+      const sheet = sheets[index];
+      if (!sheet) return;
+      const used = new Set();
+
+      for (const item of sheet.items) {
+        const frame = frames[item.i];
+        if (!frame) continue;
+        used.add(item.i);
+        frame.style.left = item.x + '%';
+        frame.style.top = item.y + '%';
+        frame.style.width = item.w + '%';
+        frame.style.height = item.h + '%';
+        frame.style.opacity = '1';
+      }
+      for (let i = 0; i < frames.length; i++) {
+        if (!used.has(i)) frames[i].style.opacity = '0';
+      }
+
+      if (coverage) coverage.textContent = sheet.coverage + ' %';
+      buttons.forEach((button, i) => {
+        const active = i === index;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+    }
+
+    let current = 2;
+    let timer = null;
+    draw(current);
+    root.classList.add('is-ready');
+
+    function stop() {
+      if (timer) window.clearInterval(timer);
+      timer = null;
+    }
+
+    buttons.forEach((button, i) => {
+      button.addEventListener('click', () => {
+        stop();
+        current = i;
+        draw(current);
+      });
+    });
+
+    // Recorrido automático hasta que la persona tome el control.
+    if (!still) {
+      timer = window.setInterval(() => {
+        current = (current + 1) % sheets.length;
+        draw(current);
+      }, 3400);
+    }
+  })();
+</script>
+
 <style>
-  .hero { padding: clamp(3rem, 8vw, 5.5rem) 0; background: linear-gradient(180deg, var(--accent-soft), var(--surface)); }
-  .grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
-  .copy { max-width: 34rem; }
-  .cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.75rem 0 1.25rem; }
-  .trust { font-size: 0.88rem; color: var(--muted); margin: 0; }
-  .visual { display: grid; justify-items: center; gap: 0.6rem; }
-  .visual svg { width: min(100%, 17rem); filter: drop-shadow(0 10px 26px rgba(15, 23, 42, 0.14)); border-radius: 6px; }
-  .visual-note { font-size: 0.76rem; color: var(--muted); }
-  @media (max-width: 860px) {
-    .grid { grid-template-columns: 1fr; }
-    .visual { order: -1; }
-    .visual svg { width: min(100%, 12rem); }
+  .hero { padding-block: clamp(2.5rem, 6vw, 4.5rem) var(--section-y); }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+  }
+
+  .hero-copy { max-width: 34rem; }
+  .hero h1 { margin-bottom: 1.1rem; }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 1.9rem 0 1.4rem;
+  }
+
+  .hero-note {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 32ch;
+    margin: 0;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* --- El pliego --- */
+  .imposition { margin: 0; display: grid; gap: 0.55rem; justify-items: stretch; }
+
+  .cote {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--cyan-deep);
+  }
+  .cote-line { flex: 1; height: 1px; background: var(--cyan); position: relative; }
+  .cote-line::before,
+  .cote-line::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    width: 1px;
+    height: 7px;
+    background: var(--cyan);
+  }
+  .cote-line::before { left: 0; }
+  .cote-line::after { right: 0; }
+  .cote-label {
+    font-family: var(--font-mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  .sheet-frame { position: relative; padding: 0.85rem; }
+
+  .crop {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 0 solid var(--cyan);
+    opacity: 0.85;
+  }
+  .crop--tl { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
+  .crop--tr { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+  .crop--bl { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
+  .crop--br { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+
+  .sheet {
+    position: relative;
+    aspect-ratio: 215.9 / 279.4;
+    background: #fff;
+    box-shadow:
+      0 1px 2px rgba(21, 23, 27, 0.09),
+      0 18px 44px -18px rgba(21, 23, 27, 0.32);
+  }
+
+  .margin-box { position: absolute; border: 1px dashed rgba(0, 145, 199, 0.55); }
+
+  .frame {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition:
+      left 0.62s cubic-bezier(0.22, 0.61, 0.36, 1),
+      top 0.62s cubic-bezier(0.22, 0.61, 0.36, 1),
+      width 0.62s cubic-bezier(0.22, 0.61, 0.36, 1),
+      height 0.62s cubic-bezier(0.22, 0.61, 0.36, 1),
+      opacity 0.32s linear;
+  }
+  .imposition:not(.is-ready) .frame { transition: none; }
+
+  .frame-no {
+    position: absolute;
+    left: 4px;
+    bottom: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  /* --- Controles --- */
+  .sheet-controls {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: center;
+    text-align: center;
+    margin-top: 0.35rem;
+  }
+  .controls-label {
+    font-family: var(--font-mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .controls-buttons { display: flex; gap: 0.35rem; }
+  .count {
+    min-width: 2.4rem;
+    padding: 0.36rem 0.2rem;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink-mid);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .count:hover { border-color: var(--ink); color: var(--ink); }
+  .count.is-active {
+    background: var(--magenta);
+    border-color: var(--magenta);
+    color: #fff;
+  }
+  .controls-readout {
+    font-family: var(--font-mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+  }
+  .controls-readout output { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .imposition { max-width: 22rem; justify-self: center; width: 100%; }
+    .hero-copy { max-width: none; }
   }
 </style>
