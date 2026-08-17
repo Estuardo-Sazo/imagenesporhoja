@@ -159,4 +159,25 @@ que es lo que suele castigar Google en las métricas de experiencia de página.
 
 ## Licencia
 
-Uso privado del proyecto. Ajusta esta sección si decides publicarlo con una licencia abierta.
+Este proyecto se desarrolla como una solución propia del autor, con la idea original, la dirección del producto, la revisión de código y la decisión final bajo control humano.
+
+La versión actual se distribuye bajo una política de derechos reservados: 
+
+> Copyright (c) 2026. Todos los derechos reservados.
+>
+> Este repositorio no se ofrece bajo una licencia de código abierto ni se autoriza su reutilización, modificación o redistribución sin consentimiento explícito del autor.
+>
+> El código puede usarse únicamente como referencia personal o para demostración de trabajo, no como base para una copia o proyecto derivado sin permiso.
+
+Si más adelante se decide abrirlo al público con una licencia abierta, conviene migrar a una licencia explícita como MIT o Apache-2.0 y dejarlo documentado en este mismo apartado.
+
+## Desarrollo asistido por IA
+
+Este proyecto fue ideado y guiado por el autor. La IA se usó como herramienta de apoyo para:
+
+- prototipado rápido de componentes y estructura,
+- sugerencia de soluciones de implementación,
+- refactorización y limpieza de código,
+- generación de documentación y textos de producto.
+
+Sin embargo, la idea central, la toma de decisiones de UX, la revisión crítica del código, la validación funcional y la aprobación final quedaron en manos del autor. La IA aceleró el trabajo, pero no reemplazó la responsabilidad humana sobre el producto final.
