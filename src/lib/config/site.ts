@@ -6,7 +6,7 @@
 export const SITE = {
   name: 'Imágenes por Hoja',
   shortName: 'ImagenesPorHoja',
-  url: 'https://imagenesporhoja.com',
+  url: 'https://imagenesporhoja.vercel.app/',
   locale: 'es',
   description:
     'Acomoda automáticamente varias imágenes en una hoja para imprimir. Eliges cuántas van por página y la herramienta calcula el tamaño y la posición que mejor aprovechan el espacio, respetando los márgenes. Gratis y sin subir archivos.',
