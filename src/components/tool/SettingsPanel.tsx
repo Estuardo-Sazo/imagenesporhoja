@@ -71,6 +71,19 @@ export function SettingsPanel({ settings, view, onSettings, onView }: Props) {
           <option value="contain">Completa, sin recortar</option>
           <option value="cover">Rellenar celda (recorta bordes)</option>
         </select>
+
+        <label className="check">
+          <input
+            type="checkbox"
+            checked={settings.uniformSizing}
+            onChange={(event) => onSettings({ uniformSizing: event.target.checked })}
+          />
+          Mismo tamaño en todas las hojas
+        </label>
+        <p className="hint">
+          Si la última hoja queda incompleta, las imágenes conservan el tamaño que tienen en las
+          hojas llenas en vez de agrandarse para ocupar el papel.
+        </p>
       </fieldset>
 
       <fieldset>

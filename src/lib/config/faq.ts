@@ -38,6 +38,11 @@ export const FAQ_ITEMS: FaqItem[] = [
       'Sí, y es justo donde más ayuda. El acomodo se calcula a partir de las proporciones reales de tus imágenes, así que puede formar una fila de tres verticales y otra de dos horizontales en vez de forzar una cuadrícula rígida.',
   },
   {
+    question: 'Si sobran imágenes, ¿la última hoja se ve distinta?',
+    answer:
+      'No. Cuando la última hoja queda incompleta —por ejemplo cinco imágenes a cuatro por página— las que quedan conservan el tamaño que tienen en las hojas llenas, en lugar de agrandarse para ocupar todo el papel. Así el documento se ve parejo de principio a fin. Si prefieres que la última hoja se llene, puedes desactivar "Mismo tamaño en todas las hojas" en el panel de ajustes.',
+  },
+  {
     question: '¿Cómo guardo el resultado en PDF?',
     answer:
       'Pulsa "Imprimir o guardar en PDF" y en el diálogo de tu navegador elige "Guardar como PDF" como destino. Selecciona márgenes "Ninguno" y desactiva los encabezados y pies de página para que la hoja salga exacta.',

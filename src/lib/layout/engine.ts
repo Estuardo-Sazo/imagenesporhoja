@@ -275,6 +275,41 @@ export function arrangePage<T extends Measurable>(
   return arrangeGrid(images, area, gapMm, fit)?.rows ?? [];
 }
 
+/**
+ * Recorta un acomodo a sus primeras `count` colocaciones, respetando el orden.
+ * Las filas que quedan vacías desaparecen.
+ */
+function keepFirst<T>(rows: LayoutRow<T>[], count: number): LayoutRow<T>[] {
+  const kept: LayoutRow<T>[] = [];
+  let remaining = count;
+  for (const row of rows) {
+    if (remaining <= 0) break;
+    const items = row.items.slice(0, remaining);
+    remaining -= items.length;
+    kept.push({ ...row, items });
+  }
+  return kept;
+}
+
+/**
+ * Completa una hoja a medias con imágenes reales para que el cálculo sea el de
+ * una hoja llena. Se toman las inmediatamente anteriores del documento, que son
+ * las que mejor representan el material; si no alcanzan, se repiten las propias.
+ */
+function padToFullPage<T>(images: T[], start: number, chunk: T[], perPage: number): T[] {
+  const missing = perPage - chunk.length;
+  if (missing <= 0) return chunk;
+
+  const previous = images.slice(Math.max(0, start - missing), start);
+  const padded = [...chunk, ...previous];
+  let i = 0;
+  while (padded.length < perPage && chunk.length > 0) {
+    padded.push(chunk[i % chunk.length]!);
+    i += 1;
+  }
+  return padded.slice(0, perPage);
+}
+
 /** Acomoda todas las imágenes y devuelve el documento completo, página por página. */
 export function computeDocumentLayout<T extends Measurable>(
   images: T[],
@@ -298,7 +333,22 @@ export function computeDocumentLayout<T extends Measurable>(
   const pages: PageLayout<T>[] = [];
 
   for (let i = 0; i < images.length; i += perPage) {
-    const rows = arrangePage(images.slice(i, i + perPage), area, settings);
+    const chunk = images.slice(i, i + perPage);
+
+    // Una hoja incompleta calculada por su cuenta agrandaría las imágenes
+    // hasta llenar el papel, y se verían mucho más grandes que en el resto
+    // del documento. Se calcula como si estuviera llena y se conservan solo
+    // las colocaciones que corresponden a imágenes reales.
+    const isPartial = chunk.length < perPage;
+    const hasFullPages = images.length > perPage;
+    if (settings.uniformSizing && isPartial && hasFullPages) {
+      const rows = arrangePage(padToFullPage(images, i, chunk, perPage), area, settings);
+      const trimmed = keepFirst(rows, chunk.length);
+      if (trimmed.length > 0) pages.push({ index: pages.length, rows: trimmed });
+      continue;
+    }
+
+    const rows = arrangePage(chunk, area, settings);
     if (rows.length > 0) pages.push({ index: pages.length, rows });
   }
 

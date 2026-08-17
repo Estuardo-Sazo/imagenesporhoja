@@ -111,6 +111,15 @@ respetando el orden elegido, calcula la altura que tendría cada fila al ocupar 
 completo y se queda con la combinación que cubre más superficie. Un factor de equilibrio penaliza
 los repartos donde unas imágenes quedan enormes y otras diminutas.
 
+### Última hoja incompleta
+
+Si el total no es múltiplo exacto de las imágenes por hoja, la última página se calcula **como si
+estuviera llena** (completándola con las imágenes inmediatamente anteriores) y luego se conservan
+solo las colocaciones que corresponden a imágenes reales. Sin esto, una hoja con una sola imagen la
+agrandaría hasta ocupar todo el papel y se vería enorme comparada con el resto del documento.
+
+Se controla con `uniformSizing` en los ajustes, activado por omisión.
+
 Para conjuntos de más de 20 imágenes por hoja (o cuando se recorta para rellenar) se usa una
 cuadrícula uniforme, que se evalúa igualmente en todas sus combinaciones de filas y columnas.
 

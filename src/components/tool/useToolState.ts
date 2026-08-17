@@ -32,6 +32,7 @@ export const DEFAULT_SETTINGS: LayoutSettings = {
   mode: 'auto',
   fit: 'contain',
   balance: 0.25,
+  uniformSizing: true,
 };
 
 export const DEFAULT_VIEW: ViewOptions = {

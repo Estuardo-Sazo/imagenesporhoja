@@ -28,6 +28,7 @@ const settings = (patch: Partial<LayoutSettings> = {}): LayoutSettings => ({
   mode: 'auto',
   fit: 'contain',
   balance: 0.25,
+  uniformSizing: true,
   ...patch,
 });
 
@@ -166,5 +167,78 @@ describe('computeDocumentLayout', () => {
   it('tiene en cuenta la rotación al calcular la proporción', () => {
     const rotated: Measurable = { naturalWidth: 1000, naturalHeight: 2000, rotation: 90 };
     expect(aspectRatio(rotated)).toBeCloseTo(2, 6);
+  });
+});
+
+describe('última hoja incompleta', () => {
+  // El caso reportado: 5 imágenes a 4 por hoja. La quinta se quedaba sola en
+  // la segunda hoja y se agrandaba hasta llenar el papel.
+  const cinco = [0.75, 1.5, 1, 1.33, 0.75].map(image);
+
+  it('mantiene el tamaño de una hoja llena', () => {
+    const layout = computeDocumentLayout(cinco, settings({ imagesPerPage: 4 }));
+    expect(layout.pages).toHaveLength(2);
+
+    const primera = flatten(layout.pages[0]!.rows);
+    const ultima = flatten(layout.pages[1]!.rows);
+    expect(ultima).toHaveLength(1);
+
+    // La imagen suelta no puede ser más grande que la mayor de la hoja llena.
+    const mayorEnHojaLlena = Math.max(...primera.map((i) => i.widthMm * i.heightMm));
+    const areaSuelta = ultima[0]!.widthMm * ultima[0]!.heightMm;
+    expect(areaSuelta).toBeLessThanOrEqual(mayorEnHojaLlena + 1);
+  });
+
+  it('coloca la imagen suelta donde le tocaría en una hoja llena', () => {
+    const layout = computeDocumentLayout(cinco, settings({ imagesPerPage: 4 }));
+    const suelta = flatten(layout.pages[1]!.rows)[0]!;
+    // Arriba a la izquierda, en línea con el resto del documento.
+    expect(suelta.xMm).toBeCloseTo(10, 0);
+    expect(suelta.yMm).toBeLessThan(100);
+  });
+
+  it('al desactivar la opción, la última hoja vuelve a llenarse', () => {
+    const conUniforme = computeDocumentLayout(cinco, settings({ imagesPerPage: 4 }));
+    const sinUniforme = computeDocumentLayout(
+      cinco,
+      settings({ imagesPerPage: 4, uniformSizing: false }),
+    );
+    const a = flatten(conUniforme.pages[1]!.rows)[0]!;
+    const b = flatten(sinUniforme.pages[1]!.rows)[0]!;
+    expect(b.widthMm).toBeGreaterThan(a.widthMm * 1.5);
+  });
+
+  it('una hoja única sí aprovecha todo el papel', () => {
+    // Con 3 imágenes y 4 por hoja no hay con qué comparar: debe llenarse.
+    const tres = [0.75, 1.5, 1].map(image);
+    const layout = computeDocumentLayout(tres, settings({ imagesPerPage: 4 }));
+    expect(layout.pages).toHaveLength(1);
+    expect(layout.coverage).toBeGreaterThan(60);
+  });
+
+  it('no pierde ni duplica imágenes al completar la hoja', () => {
+    const doce = Array.from({ length: 11 }, (_, i) => image([0.75, 1.33, 1][i % 3]!));
+    const layout = computeDocumentLayout(doce, settings({ imagesPerPage: 4 }));
+    const colocadas = layout.pages.flatMap((p) => flatten(p.rows));
+    expect(colocadas).toHaveLength(11);
+    expect(new Set(colocadas.map((c) => c.image)).size).toBe(11);
+  });
+
+  it('también funciona en cuadrícula uniforme', () => {
+    const layout = computeDocumentLayout(
+      cinco,
+      settings({ imagesPerPage: 4, mode: 'grid' }),
+    );
+    const primera = flatten(layout.pages[0]!.rows);
+    const ultima = flatten(layout.pages[1]!.rows);
+    expect(ultima).toHaveLength(1);
+    expect(ultima[0]!.heightMm).toBeLessThanOrEqual(
+      Math.max(...primera.map((i) => i.heightMm)) + 1,
+    );
+  });
+
+  it('respeta los márgenes también en la hoja incompleta', () => {
+    const layout = computeDocumentLayout(cinco, settings({ imagesPerPage: 4 }));
+    expectValid(flatten(layout.pages[1]!.rows), 1);
   });
 });

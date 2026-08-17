@@ -59,6 +59,11 @@ export interface LayoutSettings {
    * 0 = máximo aprovechamiento del papel, 0.6 = tamaños muy parejos.
    */
   balance: number;
+  /**
+   * Si la última hoja queda incompleta, mantener el tamaño que tendrían las
+   * imágenes en una hoja llena en vez de agrandarlas para llenar el papel.
+   */
+  uniformSizing: boolean;
 }
 
 /** Una imagen ya colocada, en milímetros absolutos sobre la hoja. */
