@@ -29,8 +29,16 @@ function readDimensions(url: string): Promise<{ width: number; height: number }>
   });
 }
 
-/** Convierte archivos del usuario en imágenes listas para acomodar. */
-export async function loadImages(files: Iterable<File>): Promise<LoadResult> {
+/**
+ * Convierte archivos del usuario en imágenes listas para acomodar.
+ *
+ * Solo se leen las dimensiones de cada archivo; el original se conserva
+ * intacto y no se recomprime en ningún momento.
+ */
+export async function loadImages(
+  files: Iterable<File>,
+  onProgress?: (done: number, total: number) => void,
+): Promise<LoadResult> {
   const candidates = Array.from(files);
   const rejected: string[] = [];
 
@@ -41,6 +49,10 @@ export async function loadImages(files: Iterable<File>): Promise<LoadResult> {
     }
     return SUPPORTED.test(file.type) || file.type.startsWith('image/');
   });
+
+  let done = 0;
+  const total = usable.length;
+  onProgress?.(0, total);
 
   const loaded = await Promise.all(
     usable.map(async (file): Promise<SourceImage | null> => {
@@ -60,6 +72,9 @@ export async function loadImages(files: Iterable<File>): Promise<LoadResult> {
         URL.revokeObjectURL(url);
         rejected.push(file.name);
         return null;
+      } finally {
+        done += 1;
+        onProgress?.(done, total);
       }
     }),
   );

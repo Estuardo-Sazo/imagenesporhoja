@@ -23,6 +23,11 @@ export const FAQ_ITEMS: FaqItem[] = [
       'De 1 a 40 por hoja. La herramienta calcula el tamaño necesario para que quepan todas respetando los márgenes; entre más imágenes pidas, más pequeña saldrá cada una.',
   },
   {
+    question: '¿Cuántas imágenes puedo cargar de una vez?',
+    answer:
+      'Hasta 200 por documento, que a 7 por hoja son unas 28 páginas. El tope existe porque todo el trabajo lo hace tu propia computadora: pasado cierto punto, el navegador tendría que mantener demasiadas fotos abiertas a la vez. A partir de 100 verás un aviso de que la vista previa puede ir más lenta en equipos modestos, aunque la impresión y la descarga siguen funcionando igual.',
+  },
+  {
     question: '¿Se deforman las fotos al acomodarlas?',
     answer:
       'No. Cada imagen conserva su proporción original, por eso a veces queda algo de espacio en blanco. Si prefieres que llenen todo el espacio disponible, existe la opción de rellenar recortando los bordes.',

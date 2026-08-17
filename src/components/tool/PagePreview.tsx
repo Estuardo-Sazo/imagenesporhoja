@@ -78,6 +78,10 @@ export function PagePreview({ layout, fit, view }: Props) {
                     <img
                       src={item.image.url}
                       alt={item.image.name}
+                      // Con muchas imágenes cargadas, esto evita que el
+                      // navegador decodifique de golpe todas las hojas.
+                      loading="lazy"
+                      decoding="async"
                       style={{
                         width: `${upright ? item.widthMm : item.heightMm}mm`,
                         height: `${upright ? item.heightMm : item.widthMm}mm`,

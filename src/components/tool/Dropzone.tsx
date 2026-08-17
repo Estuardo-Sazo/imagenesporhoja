@@ -2,11 +2,13 @@ import { useCallback, useRef, useState } from 'react';
 
 interface Props {
   onFiles: (files: FileList | File[]) => void;
-  onClear: () => void;
-  count: number;
+  /** `hero` para el paso de selección, `inline` para el panel lateral. */
+  variant?: 'hero' | 'inline';
+  disabled?: boolean;
+  disabledReason?: string;
 }
 
-export function Dropzone({ onFiles, onClear, count }: Props) {
+export function Dropzone({ onFiles, variant = 'inline', disabled = false, disabledReason }: Props) {
   const fileInput = useRef<HTMLInputElement>(null);
   const folderInput = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
@@ -15,36 +17,45 @@ export function Dropzone({ onFiles, onClear, count }: Props) {
     (event: React.DragEvent) => {
       event.preventDefault();
       setOver(false);
+      if (disabled) return;
       if (event.dataTransfer.files?.length) onFiles(event.dataTransfer.files);
     },
-    [onFiles],
+    [onFiles, disabled],
   );
 
   return (
-    <div>
+    <div className={`picker picker--${variant}`}>
       <button
         type="button"
         className={`dropzone${over ? ' is-over' : ''}`}
         onClick={() => fileInput.current?.click()}
+        disabled={disabled}
         onDragOver={(event) => {
           event.preventDefault();
-          setOver(true);
+          if (!disabled) setOver(true);
         }}
         onDragLeave={() => setOver(false)}
         onDrop={handleDrop}
       >
+        {variant === 'hero' && (
+          <span className="dropzone-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        )}
         Arrastra tus imágenes
-        <span>o haz clic para elegirlas</span>
+        <span className="dropzone-action">o haz clic para elegirlas</span>
       </button>
 
-      <div className="button-row">
-        <button type="button" onClick={() => folderInput.current?.click()}>
-          Elegir carpeta
-        </button>
-        <button type="button" onClick={onClear} disabled={count === 0}>
-          Quitar todas
+      <div className="picker-actions">
+        <button type="button" onClick={() => folderInput.current?.click()} disabled={disabled}>
+          Elegir una carpeta
         </button>
       </div>
+
+      {disabled && disabledReason && <p className="hint">{disabledReason}</p>}
 
       <input
         ref={fileInput}
@@ -62,7 +73,7 @@ export function Dropzone({ onFiles, onClear, count }: Props) {
         type="file"
         multiple
         hidden
-        // @ts-expect-error atributos no estándar soportados por los navegadores
+        // @ts-expect-error atributos no estándar admitidos por los navegadores
         webkitdirectory=""
         directory=""
         onChange={(event) => {

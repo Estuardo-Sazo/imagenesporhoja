@@ -79,6 +79,31 @@ las anotaciones de un pliego de imprenta.
   prestaciones se presentan como ficha técnica y el problema como comparación a dos columnas,
   en lugar de repetir tarjetas en toda la página.
 
+## La herramienta, en dos pasos
+
+`/herramienta` separa el trabajo en dos pantallas para no saturar la vista:
+
+1. **Elegir imágenes.** Solo la zona de carga y la galería de miniaturas, a tamaño cómodo para
+   revisar, reordenar arrastrando, girar y descartar.
+2. **Acomodar e imprimir.** Panel de ajustes a la izquierda y el pliego a la derecha. Desde aquí
+   se puede volver al paso anterior o agregar más imágenes sin perder los ajustes.
+
+### Límite de imágenes y memoria
+
+El tope es de **200 imágenes por documento**, con un aviso a partir de 100 (`src/lib/config/limits.ts`).
+
+No hay servidor: el techo real lo pone la memoria del equipo de quien usa la herramienta. Una foto
+de celular de 12 megapíxeles ocupa unos 48 MB ya decodificada, así que lo que pesa no es el número
+de archivos sino cuántos tiene el navegador abiertos a la vez. Por eso, además del tope:
+
+- Las imágenes de la vista previa y de las miniaturas usan `loading="lazy"` y `decoding="async"`,
+  de modo que el navegador solo decodifica lo que está en pantalla.
+- Cada hoja de la vista previa usa `content-visibility: auto`, así que las páginas fuera de la
+  ventana ni siquiera se dibujan.
+- Los `objectURL` se liberan al quitar imágenes o al vaciar la selección.
+
+Los archivos originales nunca se recomprimen: se conservan intactos y se usan tal cual al exportar.
+
 ## Cómo funciona el acomodo
 
 El motor no usa una cuadrícula fija. Prueba **todas las formas de repartir las imágenes en filas**
