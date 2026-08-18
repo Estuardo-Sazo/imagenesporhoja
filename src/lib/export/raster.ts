@@ -15,6 +15,8 @@ const MAX_SIDE = 3200;
 export interface RasterResult {
   bytes: Uint8Array;
   extension: 'png' | 'jpg';
+  widthPx: number;
+  heightPx: number;
 }
 
 function loadImageElement(url: string): Promise<HTMLImageElement> {
@@ -28,7 +30,7 @@ function loadImageElement(url: string): Promise<HTMLImageElement> {
 
 export async function rasterizePlacement(
   placement: PlacedImage<SourceImage>,
-  options: { dpi: number; fit: FitMode },
+  options: { dpi: number; fit: FitMode; format?: 'auto' | 'jpeg' },
 ): Promise<RasterResult> {
   const source = await loadImageElement(placement.image.url);
 
@@ -44,7 +46,9 @@ export async function rasterizePlacement(
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('El navegador no permitió crear el lienzo de dibujo.');
 
-  const keepPng = /\.png$/i.test(placement.image.name);
+  // El PDF solo incrusta JPEG (DCTDecode) para no tener que reimplementar el
+  // predictor PNG del formato; forzarlo aquí aplana la transparencia a blanco.
+  const keepPng = options.format !== 'jpeg' && /\.png$/i.test(placement.image.name);
   if (!keepPng) {
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, width, height);
@@ -94,5 +98,7 @@ export async function rasterizePlacement(
   return {
     bytes: new Uint8Array(await blob.arrayBuffer()),
     extension: keepPng ? 'png' : 'jpg',
+    widthPx: width,
+    heightPx: height,
   };
 }

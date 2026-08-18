@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { buildDocx, downloadBlob } from '../../lib/export/docx';
+import { buildPdf } from '../../lib/export/pdf';
 import { Dropzone } from './Dropzone';
 import { PagePreview } from './PagePreview';
 import { SettingsPanel } from './SettingsPanel';
@@ -28,6 +29,33 @@ export default function ToolApp() {
     document.head.appendChild(style);
     return () => style.remove();
   }, [layout?.pageWidthMm, layout?.pageHeightMm]);
+
+  const handlePdf = useCallback(async () => {
+    if (!layout) return;
+    state.setBusy(true);
+    setProgress('Preparando el PDF…');
+    try {
+      const blob = await buildPdf({
+        layout,
+        settings,
+        showBorders: view.showBorders,
+        showCaptions: view.showCaptions,
+        showPageNumbers: view.showPageNumbers,
+        dpi: view.dpi,
+        onProgress: (done, total) => setProgress(`Procesando imagen ${done} de ${total}…`),
+      });
+      downloadBlob(blob, `imagenes-${settings.imagesPerPage}-por-hoja.pdf`);
+    } catch (error) {
+      state.setNotice({
+        tone: 'error',
+        text:
+          error instanceof Error ? `No se pudo generar el PDF: ${error.message}` : 'No se pudo generar el PDF.',
+      });
+    } finally {
+      state.setBusy(false);
+      setProgress(null);
+    }
+  }, [layout, settings, view, state]);
 
   const handleDocx = useCallback(async () => {
     if (!layout) return;
@@ -138,9 +166,12 @@ export default function ToolApp() {
                 type="button"
                 className="primary"
                 disabled={!ready || state.busy}
-                onClick={() => window.print()}
+                onClick={handlePdf}
               >
-                Imprimir / PDF
+                {state.busy ? 'Generando…' : 'Descargar PDF'}
+              </button>
+              <button type="button" disabled={!ready || state.busy} onClick={() => window.print()}>
+                Imprimir
               </button>
               <button type="button" disabled={!ready || state.busy} onClick={handleDocx}>
                 {state.busy ? 'Generando…' : 'Descargar Word'}
