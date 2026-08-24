@@ -28,9 +28,11 @@ export const DEFAULT_SETTINGS: LayoutSettings = {
   orientation: 'portrait',
   margins: uniformMargins(10),
   gapMm: 3,
+  sizeMode: 'perPage',
   imagesPerPage: 7,
+  fixedSize: { widthMm: 100, heightMm: 100 },
   mode: 'auto',
-  fit: 'contain',
+  fit: 'cover',
   balance: 0.25,
   uniformSizing: true,
 };

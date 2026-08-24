@@ -44,7 +44,7 @@ export default function ToolApp() {
         dpi: view.dpi,
         onProgress: (done, total) => setProgress(`Procesando imagen ${done} de ${total}…`),
       });
-      downloadBlob(blob, `imagenes-${settings.imagesPerPage}-por-hoja.pdf`);
+      downloadBlob(blob, `imagenes-${layout.imagesPerPage}-por-hoja.pdf`);
     } catch (error) {
       state.setNotice({
         tone: 'error',
@@ -71,7 +71,7 @@ export default function ToolApp() {
         dpi: view.dpi,
         onProgress: (done, total) => setProgress(`Procesando imagen ${done} de ${total}…`),
       });
-      downloadBlob(blob, `imagenes-${settings.imagesPerPage}-por-hoja.docx`);
+      downloadBlob(blob, `imagenes-${layout.imagesPerPage}-por-hoja.docx`);
     } catch (error) {
       state.setNotice({
         tone: 'error',
@@ -192,7 +192,7 @@ export default function ToolApp() {
               ) : layout ? (
                 <span>
                   {images.length} imágenes · {layout.pages.length} página
-                  {layout.pages.length === 1 ? '' : 's'} · {settings.imagesPerPage} por hoja ·
+                  {layout.pages.length === 1 ? '' : 's'} · {layout.imagesPerPage} por hoja ·
                   aprovechamiento del área útil: {Math.round(layout.coverage)} %
                 </span>
               ) : null}

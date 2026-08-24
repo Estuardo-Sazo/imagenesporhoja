@@ -177,6 +177,53 @@ export function arrangeJustified<T extends Measurable>(
  * Estrategia 2: cuadrícula uniforme
  * ------------------------------------------------------------------ */
 
+/** Coloca imágenes en celdas de tamaño fijo, `cols` por fila, centradas en el área. */
+function placeGrid<T extends Measurable>(
+  images: T[],
+  area: Area,
+  gapMm: number,
+  cols: number,
+  cellW: number,
+  cellH: number,
+  fit: 'contain' | 'cover',
+): LayoutRow<T>[] {
+  const rowCount = Math.ceil(images.length / cols);
+  const gridHeight = rowCount * cellH + (rowCount - 1) * gapMm;
+  const offsetY = Math.max(0, (area.heightMm - gridHeight) / 2);
+
+  const rows: LayoutRow<T>[] = [];
+  for (let r = 0; r < rowCount; r++) {
+    const slice = images.slice(r * cols, r * cols + cols);
+    if (slice.length === 0) break;
+
+    const rowWidth = slice.length * cellW + (slice.length - 1) * gapMm;
+    const rowX = area.xMm + (area.widthMm - rowWidth) / 2;
+    const rowY = area.yMm + offsetY + r * (cellH + gapMm);
+
+    const items: PlacedImage<T>[] = slice.map((image, j) => {
+      const cellX = rowX + j * (cellW + gapMm);
+      let widthMm = cellW;
+      let heightMm = cellH;
+      if (fit !== 'cover') {
+        const ratio = aspectRatio(image);
+        widthMm = Math.min(cellW, cellH * ratio);
+        heightMm = widthMm / ratio;
+      }
+      return {
+        image,
+        xMm: cellX + (cellW - widthMm) / 2,
+        yMm: rowY + (cellH - heightMm) / 2,
+        widthMm,
+        heightMm,
+      };
+    });
+
+    rows.push({ items, topMm: rowY, heightMm: cellH });
+  }
+
+  return rows;
+}
+
 export function arrangeGrid<T extends Measurable>(
   images: T[],
   area: Area,
@@ -213,41 +260,25 @@ export function arrangeGrid<T extends Measurable>(
   }
   if (!best) return null;
 
-  const { rows: rowCount, cols, cellW, cellH } = best;
-  const gridHeight = rowCount * cellH + (rowCount - 1) * gapMm;
-  const offsetY = Math.max(0, (area.heightMm - gridHeight) / 2);
-
-  const rows: LayoutRow<T>[] = [];
-  for (let r = 0; r < rowCount; r++) {
-    const slice = images.slice(r * cols, r * cols + cols);
-    if (slice.length === 0) break;
-
-    const rowWidth = slice.length * cellW + (slice.length - 1) * gapMm;
-    const rowX = area.xMm + (area.widthMm - rowWidth) / 2;
-    const rowY = area.yMm + offsetY + r * (cellH + gapMm);
-
-    const items: PlacedImage<T>[] = slice.map((image, j) => {
-      const cellX = rowX + j * (cellW + gapMm);
-      let widthMm = cellW;
-      let heightMm = cellH;
-      if (fit !== 'cover') {
-        const ratio = aspectRatio(image);
-        widthMm = Math.min(cellW, cellH * ratio);
-        heightMm = widthMm / ratio;
-      }
-      return {
-        image,
-        xMm: cellX + (cellW - widthMm) / 2,
-        yMm: rowY + (cellH - heightMm) / 2,
-        widthMm,
-        heightMm,
-      };
-    });
-
-    rows.push({ items, topMm: rowY, heightMm: cellH });
-  }
-
+  const rows = placeGrid(images, area, gapMm, best.cols, best.cellW, best.cellH, fit);
   return { rows, area: best.area, score: best.area };
+}
+
+/**
+ * Cuántas celdas de `widthMm` × `heightMm` caben en el área útil, y el tamaño
+ * real de celda ya recortado para que al menos una quepa (nunca se agranda).
+ */
+export function fixedGridCapacity(
+  area: Area,
+  gapMm: number,
+  widthMm: number,
+  heightMm: number,
+): { cols: number; rows: number; perPage: number; cellW: number; cellH: number } {
+  const cellW = Math.min(Math.max(widthMm, 1), area.widthMm);
+  const cellH = Math.min(Math.max(heightMm, 1), area.heightMm);
+  const cols = Math.max(1, Math.floor((area.widthMm + gapMm) / (cellW + gapMm)));
+  const rows = Math.max(1, Math.floor((area.heightMm + gapMm) / (cellH + gapMm)));
+  return { cols, rows, perPage: cols * rows, cellW, cellH };
 }
 
 /* ------------------------------------------------------------------ *
@@ -329,7 +360,23 @@ export function computeDocumentLayout<T extends Measurable>(
     throw new LayoutError('Los márgenes no dejan espacio útil en la hoja.');
   }
 
-  const perPage = Math.max(1, Math.floor(settings.imagesPerPage));
+  let perPage: number;
+  let placeChunk: (chunk: T[]) => LayoutRow<T>[];
+
+  if (settings.sizeMode === 'fixed') {
+    const { cols, cellW, cellH, perPage: capacity } = fixedGridCapacity(
+      area,
+      settings.gapMm,
+      settings.fixedSize.widthMm,
+      settings.fixedSize.heightMm,
+    );
+    perPage = capacity;
+    placeChunk = (chunk) => placeGrid(chunk, area, settings.gapMm, cols, cellW, cellH, settings.fit);
+  } else {
+    perPage = Math.max(1, Math.floor(settings.imagesPerPage));
+    placeChunk = (chunk) => arrangePage(chunk, area, settings);
+  }
+
   const pages: PageLayout<T>[] = [];
 
   for (let i = 0; i < images.length; i += perPage) {
@@ -342,13 +389,13 @@ export function computeDocumentLayout<T extends Measurable>(
     const isPartial = chunk.length < perPage;
     const hasFullPages = images.length > perPage;
     if (settings.uniformSizing && isPartial && hasFullPages) {
-      const rows = arrangePage(padToFullPage(images, i, chunk, perPage), area, settings);
+      const rows = placeChunk(padToFullPage(images, i, chunk, perPage));
       const trimmed = keepFirst(rows, chunk.length);
       if (trimmed.length > 0) pages.push({ index: pages.length, rows: trimmed });
       continue;
     }
 
-    const rows = arrangePage(chunk, area, settings);
+    const rows = placeChunk(chunk);
     if (rows.length > 0) pages.push({ index: pages.length, rows });
   }
 
@@ -364,5 +411,6 @@ export function computeDocumentLayout<T extends Measurable>(
     pageHeightMm: heightMm,
     margins,
     coverage: total > 0 ? (covered / total) * 100 : 0,
+    imagesPerPage: perPage,
   };
 }

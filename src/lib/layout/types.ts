@@ -8,6 +8,15 @@ export type FitMode = 'contain' | 'cover';
 /** Estrategia de acomodo. */
 export type ArrangeMode = 'auto' | 'grid';
 
+/** Cómo se decide el tamaño de cada imagen. */
+export type SizeMode = 'perPage' | 'fixed';
+
+/** Tamaño fijo de celda, en milímetros. */
+export interface FixedSize {
+  widthMm: number;
+  heightMm: number;
+}
+
 /** Una imagen cargada por el usuario. */
 export interface SourceImage {
   id: string;
@@ -51,7 +60,11 @@ export interface LayoutSettings {
   margins: Margins;
   /** Separación entre imágenes, en milímetros. */
   gapMm: number;
+  /** Cómo se decide cuántas imágenes caben en cada hoja. */
+  sizeMode: SizeMode;
   imagesPerPage: number;
+  /** Tamaño de celda cuando `sizeMode` es 'fixed'; caben las que alcancen en la hoja. */
+  fixedSize: FixedSize;
   mode: ArrangeMode;
   fit: FitMode;
   /**
@@ -93,4 +106,6 @@ export interface DocumentLayout<T = SourceImage> {
   margins: Margins;
   /** Porcentaje del área útil realmente cubierto por imágenes (0-100). */
   coverage: number;
+  /** Cuántas imágenes caben por hoja según el modo de tamaño elegido. */
+  imagesPerPage: number;
 }

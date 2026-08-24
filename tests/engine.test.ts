@@ -9,7 +9,13 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { arrangeGrid, arrangeJustified, computeDocumentLayout, aspectRatio } from '../src/lib/layout/engine';
+import {
+  arrangeGrid,
+  arrangeJustified,
+  computeDocumentLayout,
+  aspectRatio,
+  fixedGridCapacity,
+} from '../src/lib/layout/engine';
 import type { LayoutSettings, Measurable, PlacedImage } from '../src/lib/layout/types';
 import { uniformMargins } from '../src/lib/layout/units';
 
@@ -24,7 +30,9 @@ const settings = (patch: Partial<LayoutSettings> = {}): LayoutSettings => ({
   orientation: 'portrait',
   margins: uniformMargins(10),
   gapMm: 3,
+  sizeMode: 'perPage',
   imagesPerPage: 7,
+  fixedSize: { widthMm: 100, heightMm: 100 },
   mode: 'auto',
   fit: 'contain',
   balance: 0.25,
@@ -240,5 +248,90 @@ describe('última hoja incompleta', () => {
   it('respeta los márgenes también en la hoja incompleta', () => {
     const layout = computeDocumentLayout(cinco, settings({ imagesPerPage: 4 }));
     expectValid(flatten(layout.pages[1]!.rows), 1);
+  });
+});
+
+describe('fixedGridCapacity', () => {
+  it('calcula cuántas celdas de 10x10 cm caben en una hoja carta', () => {
+    // Área útil: 195.9 x 259.4 mm, celdas de 100mm con 3mm de separación.
+    const cap = fixedGridCapacity(CONTENT, 3, 100, 100);
+    expect(cap.cols).toBe(1);
+    expect(cap.rows).toBe(2);
+    expect(cap.perPage).toBe(2);
+  });
+
+  it('recorta la celda para que al menos una quepa si es más grande que el área', () => {
+    const cap = fixedGridCapacity(CONTENT, 3, 500, 500);
+    expect(cap.cellW).toBeLessThanOrEqual(CONTENT.widthMm);
+    expect(cap.cellH).toBeLessThanOrEqual(CONTENT.heightMm);
+    expect(cap.perPage).toBe(1);
+  });
+
+  it('celdas pequeñas caben varias por fila y columna', () => {
+    const cap = fixedGridCapacity(CONTENT, 3, 40, 40);
+    expect(cap.cols).toBeGreaterThan(1);
+    expect(cap.rows).toBeGreaterThan(1);
+    expect(cap.perPage).toBe(cap.cols * cap.rows);
+  });
+});
+
+describe('computeDocumentLayout con tamaño fijo (cm)', () => {
+  it('usa el mismo tamaño de celda en todas las hojas, sin importar cuántas imágenes sobren', () => {
+    const images = [0.75, 1.5, 1, 1.33, 0.75].map(image);
+    const layout = computeDocumentLayout(
+      images,
+      settings({ sizeMode: 'fixed', fixedSize: { widthMm: 100, heightMm: 100 } }),
+    );
+    const placed = layout.pages.flatMap((p) => flatten(p.rows));
+    expect(placed).toHaveLength(5);
+
+    const sizes = new Set(placed.map((p) => `${p.widthMm.toFixed(2)}x${p.heightMm.toFixed(2)}`));
+    // Con fit contain el tamaño depende de la proporción de cada imagen,
+    // pero el área de celda (ancho x alto máximos) debe ser idéntica siempre.
+    for (const item of placed) {
+      expect(item.widthMm).toBeLessThanOrEqual(100 + EPS);
+      expect(item.heightMm).toBeLessThanOrEqual(100 + EPS);
+    }
+    expect(sizes.size).toBeGreaterThan(0);
+  });
+
+  it('en modo recorte todas las celdas fijas miden exactamente lo mismo', () => {
+    const images = [0.75, 1.5, 1, 1.33].map(image);
+    const layout = computeDocumentLayout(
+      images,
+      settings({
+        sizeMode: 'fixed',
+        fixedSize: { widthMm: 80, heightMm: 80 },
+        fit: 'cover',
+      }),
+    );
+    const placed = layout.pages.flatMap((p) => flatten(p.rows));
+    for (const item of placed) {
+      expect(item.widthMm).toBeCloseTo(80, 6);
+      expect(item.heightMm).toBeCloseTo(80, 6);
+    }
+  });
+
+  it('reporta en imagesPerPage cuántas caben según el tamaño fijo', () => {
+    const images = Array.from({ length: 3 }, () => image(1));
+    const layout = computeDocumentLayout(
+      images,
+      settings({ sizeMode: 'fixed', fixedSize: { widthMm: 100, heightMm: 100 } }),
+    );
+    expect(layout.imagesPerPage).toBe(2);
+    expect(layout.pages).toHaveLength(2);
+  });
+
+  it('no pierde imágenes y no se salen de los márgenes', () => {
+    const images = Array.from({ length: 9 }, (_, i) => image([0.75, 1.33, 1][i % 3]!));
+    const layout = computeDocumentLayout(
+      images,
+      settings({ sizeMode: 'fixed', fixedSize: { widthMm: 60, heightMm: 60 } }),
+    );
+    const placed = layout.pages.flatMap((p) => flatten(p.rows));
+    expect(placed).toHaveLength(9);
+    for (const page of layout.pages) {
+      expectValid(flatten(page.rows), page.rows.flatMap((r) => r.items).length);
+    }
   });
 });

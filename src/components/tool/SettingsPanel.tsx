@@ -25,42 +25,99 @@ export function SettingsPanel({ settings, view, onSettings, onView }: Props) {
       <fieldset>
         <legend>Distribución</legend>
 
-        <label htmlFor="per-page">Imágenes por hoja</label>
-        <input
-          id="per-page"
-          type="number"
-          min={1}
-          max={40}
-          step={1}
-          value={settings.imagesPerPage}
+        <label htmlFor="size-mode">Tamaño de las imágenes</label>
+        <select
+          id="size-mode"
+          value={settings.sizeMode}
           onChange={(event) =>
-            onSettings({
-              imagesPerPage: Math.min(40, Math.max(1, Number(event.target.value) || 1)),
-            })
+            onSettings({ sizeMode: event.target.value as LayoutSettings['sizeMode'] })
           }
-        />
-
-        <label htmlFor="mode">Acomodo</label>
-        <select
-          id="mode"
-          value={settings.mode}
-          onChange={(event) => onSettings({ mode: event.target.value as LayoutSettings['mode'] })}
         >
-          <option value="auto">Automático (filas de altura variable)</option>
-          <option value="grid">Cuadrícula uniforme</option>
+          <option value="perPage">Por cantidad (yo elijo cuántas por hoja)</option>
+          <option value="fixed">Por tamaño fijo (cm) — caben las que alcancen</option>
         </select>
 
-        <label htmlFor="balance">Equilibrio de tamaños</label>
-        <select
-          id="balance"
-          value={String(settings.balance)}
-          onChange={(event) => onSettings({ balance: Number(event.target.value) })}
-          disabled={settings.mode === 'grid'}
-        >
-          <option value="0">Máximo aprovechamiento</option>
-          <option value="0.25">Equilibrado (recomendado)</option>
-          <option value="0.6">Muy parejo</option>
-        </select>
+        {settings.sizeMode === 'perPage' ? (
+          <>
+            <label htmlFor="per-page">Imágenes por hoja</label>
+            <input
+              id="per-page"
+              type="number"
+              min={1}
+              max={40}
+              step={1}
+              value={settings.imagesPerPage}
+              onChange={(event) =>
+                onSettings({
+                  imagesPerPage: Math.min(40, Math.max(1, Number(event.target.value) || 1)),
+                })
+              }
+            />
+
+            <label htmlFor="mode">Acomodo</label>
+            <select
+              id="mode"
+              value={settings.mode}
+              onChange={(event) => onSettings({ mode: event.target.value as LayoutSettings['mode'] })}
+            >
+              <option value="auto">Automático (filas de altura variable)</option>
+              <option value="grid">Cuadrícula uniforme</option>
+            </select>
+
+            <label htmlFor="balance">Equilibrio de tamaños</label>
+            <select
+              id="balance"
+              value={String(settings.balance)}
+              onChange={(event) => onSettings({ balance: Number(event.target.value) })}
+              disabled={settings.mode === 'grid'}
+            >
+              <option value="0">Máximo aprovechamiento</option>
+              <option value="0.25">Equilibrado (recomendado)</option>
+              <option value="0.6">Muy parejo</option>
+            </select>
+          </>
+        ) : (
+          <>
+            <span className="field-label">Tamaño de cada imagen (cm)</span>
+            <div className="grid-4">
+              <input
+                type="number"
+                min={1}
+                max={100}
+                step={0.5}
+                title="Ancho"
+                aria-label="Ancho en centímetros"
+                value={Number(mmToCm(settings.fixedSize.widthMm).toFixed(2))}
+                onChange={(event) =>
+                  onSettings({
+                    fixedSize: {
+                      ...settings.fixedSize,
+                      widthMm: Math.max(1, Number(event.target.value) || 1) * 10,
+                    },
+                  })
+                }
+              />
+              <input
+                type="number"
+                min={1}
+                max={100}
+                step={0.5}
+                title="Alto"
+                aria-label="Alto en centímetros"
+                value={Number(mmToCm(settings.fixedSize.heightMm).toFixed(2))}
+                onChange={(event) =>
+                  onSettings({
+                    fixedSize: {
+                      ...settings.fixedSize,
+                      heightMm: Math.max(1, Number(event.target.value) || 1) * 10,
+                    },
+                  })
+                }
+              />
+            </div>
+            <p className="hint">Ancho · Alto. Se acomodan tantas como quepan en la hoja.</p>
+          </>
+        )}
 
         <label htmlFor="fit">Ajuste de cada imagen</label>
         <select

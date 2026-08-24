@@ -529,6 +529,9 @@
     break-after: page;
     page-break-after: always;
   }
-  .page:last-child { break-after: auto; page-break-after: auto; }
+  /* .page nunca es :last-child de .page-holder: el <p class="page-label">
+     (oculto arriba, pero presente en el DOM) siempre lo sigue. Por eso el
+     corte de página se desactiva apuntando al .page-holder, no al .page. */
+  .page-holder:last-child .page { break-after: auto; page-break-after: auto; }
   .margin-guide { display: none !important; }
 }
