@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import type { LayoutSettings } from '../../lib/layout/types';
 import { PAPER_SIZES, mmToCm } from '../../lib/layout/units';
 import type { ViewOptions } from './useToolState';
@@ -15,6 +16,82 @@ const MARGIN_FIELDS = [
   { key: 'bottom', label: 'Inferior' },
   { key: 'left', label: 'Izquierdo' },
 ] as const;
+
+const MAX_IMAGES_PER_PAGE = 40;
+// Cuánto se espera, sin más tecleo, antes de asumir 1 si el campo quedó vacío o inválido.
+const EMPTY_IMAGES_PER_PAGE_TIMEOUT_MS = 1500;
+
+function ImagesPerPageInput({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  const [text, setText] = useState(String(value));
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Refleja cambios externos (p. ej. deshacer) sin pisar lo que la persona está tecleando.
+  useEffect(() => {
+    setText(String(value));
+  }, [value]);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const commitDefault = () => {
+    clearTimer();
+    setText('1');
+    onChange(1);
+  };
+
+  return (
+    <input
+      id="per-page"
+      type="number"
+      min={1}
+      max={MAX_IMAGES_PER_PAGE}
+      step={1}
+      value={text}
+      onChange={(event) => {
+        const raw = event.target.value;
+        clearTimer();
+
+        const parsed = Number(raw);
+        if (raw.trim() !== '' && Number.isFinite(parsed) && parsed >= 1) {
+          const clamped = Math.min(MAX_IMAGES_PER_PAGE, parsed);
+          setText(clamped === parsed ? raw : String(clamped));
+          onChange(clamped);
+        } else {
+          // Deja escribir libremente (incluido vacío); solo cae a 1 si nadie sigue tecleando.
+          setText(raw);
+          timerRef.current = setTimeout(commitDefault, EMPTY_IMAGES_PER_PAGE_TIMEOUT_MS);
+        }
+      }}
+      onBlur={(event) => {
+        clearTimer();
+        const parsed = Number(event.target.value);
+        if (event.target.value.trim() === '' || !Number.isFinite(parsed) || parsed < 1) {
+          commitDefault();
+        } else {
+          const clamped = Math.min(MAX_IMAGES_PER_PAGE, parsed);
+          setText(String(clamped));
+          onChange(clamped);
+        }
+      }}
+    />
+  );
+}
 
 export function SettingsPanel({ settings, view, onSettings, onView }: Props) {
   const setMargin = (key: (typeof MARGIN_FIELDS)[number]['key'], cm: number) =>
@@ -40,18 +117,9 @@ export function SettingsPanel({ settings, view, onSettings, onView }: Props) {
         {settings.sizeMode === 'perPage' ? (
           <>
             <label htmlFor="per-page">Imágenes por hoja</label>
-            <input
-              id="per-page"
-              type="number"
-              min={1}
-              max={40}
-              step={1}
+            <ImagesPerPageInput
               value={settings.imagesPerPage}
-              onChange={(event) =>
-                onSettings({
-                  imagesPerPage: Math.min(40, Math.max(1, Number(event.target.value) || 1)),
-                })
-              }
+              onChange={(imagesPerPage) => onSettings({ imagesPerPage })}
             />
 
             <label htmlFor="mode">Acomodo</label>
