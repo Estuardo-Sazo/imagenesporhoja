@@ -16,6 +16,7 @@
     "@astrojs/sitemap": "^3.7.0",
     "@fontsource-variable/archivo": "^5.3.0",
     "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@vercel/speed-insights": "^2.0.0",
     "astro": "^5.16.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
