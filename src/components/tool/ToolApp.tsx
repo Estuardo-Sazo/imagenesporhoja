@@ -8,6 +8,7 @@ import { StepSelect } from './StepSelect';
 import { ThumbnailStrip } from './ThumbnailStrip';
 import { useToolState } from './useToolState';
 import { MAX_IMAGES } from '../../lib/config/limits';
+import { DONATE } from '../../lib/config/site';
 import './tool.css';
 
 const STEPS = [
@@ -181,6 +182,14 @@ export default function ToolApp() {
               Al imprimir elige <strong>Márgenes: Ninguno</strong> y desactiva los encabezados y
               pies de página para que la hoja salga exacta.
             </p>
+            {DONATE.url && (
+              <p className="donate-note">
+                ¿Te sirvió?{' '}
+                <a href={DONATE.url} target="_blank" rel="noopener">
+                  {DONATE.label} 🌮
+                </a>
+              </p>
+            )}
           </aside>
 
           <section className="tool-main">

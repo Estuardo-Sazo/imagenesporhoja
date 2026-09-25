@@ -1,5 +1,6 @@
 ---
 import { SITE } from '../../lib/config/site';
+import DonateButton from './DonateButton.astro';
 const year = new Date().getFullYear();
 ---
 
@@ -9,6 +10,8 @@ const year = new Date().getFullYear();
       Acomoda tus imágenes en una hoja y mándalas a imprimir. Gratis, sin registro y sin que tus
       archivos salgan de tu equipo.
     </p>
+
+    <DonateButton />
 
     <nav aria-label="Enlaces del pie">
       <a href="/herramienta">Herramienta</a>

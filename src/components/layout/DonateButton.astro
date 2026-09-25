@@ -1,0 +1,32 @@
+---
+import { DONATE } from '../../lib/config/site';
+---
+
+{
+  DONATE.url && (
+    <a class="donate" href={DONATE.url} target="_blank" rel="noopener">
+      <span aria-hidden="true">🌮</span>
+      {DONATE.label}
+    </a>
+  )
+}
+
+<style>
+  .donate {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    justify-self: start;
+    padding: 0.45rem 0.9rem;
+    border: 1.5px solid #000;
+    border-radius: 999px;
+    background: #ffdd00;
+    color: #000;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.15s ease;
+  }
+  .donate:hover { transform: translateY(-1px); }
+  .donate:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
+</style>

@@ -302,6 +302,13 @@
   color: var(--ink-soft);
   margin: 0.55rem 0 0;
 }
+.donate-note {
+  margin: 0.9rem 0 0;
+  font-size: 0.8rem;
+  color: var(--ink-mid);
+}
+.donate-note a { color: var(--ink); font-weight: 600; }
+.donate-note a:hover { color: var(--magenta); }
 
 /* --- Zona de carga --- */
 .dropzone {

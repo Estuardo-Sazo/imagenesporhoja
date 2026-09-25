@@ -43,3 +43,15 @@ export const ADS = {
     toolFooter: '',
   },
 } as const;
+
+/**
+ * Donaciones con Buy Me a Coffee.
+ *
+ * Es un enlace normal y no el script oficial del botón: ese script usa
+ * document.write, bloquea la carga de la página y trae su propia fuente.
+ * Deja `url` vacío para ocultar el botón en todo el sitio.
+ */
+export const DONATE = {
+  url: 'https://www.buymeacoffee.com/estuardosas',
+  label: 'Invítame a un taco',
+} as const;
