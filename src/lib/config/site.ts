@@ -52,6 +52,6 @@ export const ADS = {
  * Deja `url` vacío para ocultar el botón en todo el sitio.
  */
 export const DONATE = {
-  url: 'https://buymeacoffee.com/estuardosazo',
+  url: 'https://buymeacoffee.com/jaszcode',
   label: 'Invítame a un taco',
 } as const;
